@@ -1,0 +1,18 @@
+{
+  "name": "maizal",
+  "version": "0.1.0",
+  "description": "Search algorithm framework to find and expand trees.",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "js"
+  ],
+  "author": "Benjamin Hernandez",
+  "license": "MIT"
+}
