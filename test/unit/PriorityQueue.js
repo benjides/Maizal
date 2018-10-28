@@ -28,9 +28,12 @@ describe('PriorityQueue string Constructor', function() {
   it('The queue size should be increased', function() {
     expect(q.size()).to.eq(12);
   });
-  it('A cleared queue should be empty', function() {
+  it('A cleared queue should not have size', function() {
     q.clear();
     expect(q.size()).to.be.eq(0);
+  });
+  it('An emptied queue should be empty', function() {
+    expect(q.empty()).to.be.eq(true);
   });
   it('Adding an array in a random order should not affect the priorities', function() {
     var rev = months.slice(0);
@@ -40,8 +43,8 @@ describe('PriorityQueue string Constructor', function() {
 });
 
 describe('PriorityQueue function Constructor', function() {
-  var q = new PriorityQueue(function(a, b) {
-    return a.index - b.index;
+  var q = new PriorityQueue(function(a) {
+    return a.index + 15;
   });
   it('An element should be inserted first if the queue is empty', function() {
     expect(q.enqueue(months[5])).to.eq(0);
@@ -76,5 +79,15 @@ describe('PriorityQueue default Constructor', function() {
   it('And array should be inserted as reversed', function() {
     q.enqueue(months);
     expect(q.dequeue().name).to.eq('December');
+  });
+});
+
+describe('Priority Queue string Constructor using a not existent field', function() {
+  var q = new PriorityQueue('iDoNotExist');
+  it('An element is inserted but only once', function() {
+    expect(function() { return q.enqueue(months[3]); }).to.not.throw();
+  });
+  it('An array cannot be inserted and an error thrown', function() {
+    expect(function() { return q.enqueue(months); }).to.throw();
   });
 });
