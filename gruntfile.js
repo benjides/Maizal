@@ -31,7 +31,7 @@ module.exports = function config(grunt) {
 
     mochaTest: {
       test: {
-        src: ['test/unit/*.js']
+        src: ['test/unit/*.js', 'test/unit/maizal/*.js']
       },
       options: {
         timeout: 30000
