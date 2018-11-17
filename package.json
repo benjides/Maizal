@@ -4,13 +4,11 @@
   "description": "Search algorithm framework to find and expand trees.",
   "main": "lib/maizal.js",
   "scripts": {
-    "build": "npm run lint && babel --delete-dir-on-start -d lib/ src/",
+    "build": "npm run lint && babel --delete-dir-on-start -d lib/ src/ && size-limit",
     "preversion": "npm test",
     "prepublishOnly": "npm run build",
     "lint": "eslint ./src",
     "test": "nyc mocha test/unit/*.js --reporter spec",
-    "size": "size-limit",
-    "posttest": "size-limit",
     "clean": "rm ./lib"
   },
   "repository": {
