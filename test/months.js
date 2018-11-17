@@ -1,52 +1,50 @@
-'use strict';
-
 module.exports = [
   {
     index: 1,
-    name: 'January'
+    name: 'January',
   },
   {
     index: 2,
-    name: 'February'
+    name: 'February',
   },
   {
     index: 3,
-    name: 'March'
+    name: 'March',
   },
   {
     index: 4,
-    name: 'April'
+    name: 'April',
   },
   {
     index: 5,
-    name: 'May'
+    name: 'May',
   },
   {
     index: 6,
-    name: 'June'
+    name: 'June',
   },
   {
     index: 7,
-    name: 'July'
+    name: 'July',
   },
   {
     index: 8,
-    name: 'August'
+    name: 'August',
   },
   {
     index: 9,
-    name: 'September'
+    name: 'September',
   },
   {
     index: 10,
-    name: 'October'
+    name: 'October',
   },
   {
     index: 11,
-    name: 'November'
+    name: 'November',
   },
   {
     index: 12,
-    name: 'December'
-  }
+    name: 'December',
+  },
 ];

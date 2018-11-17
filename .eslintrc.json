@@ -1,0 +1,14 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true,
+        "mocha": true
+    },
+    "extends": "airbnb-base",
+    "rules": {
+      "func-names": ["error", "never"],
+      "no-param-reassign": [2, { "props": false }],
+      "max-len": "off"
+    }
+}

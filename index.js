@@ -1,1 +1,1 @@
-module.exports = require('./lib/maizal');
+module.exports = require('./src/maizal');

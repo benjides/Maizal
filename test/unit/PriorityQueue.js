@@ -1,7 +1,5 @@
-'use strict';
-
 var expect = require('chai').expect;
-var PriorityQueue = require('../../lib/util/PriorityQueue');
+var PriorityQueue = require('../../src/util/PriorityQueue');
 var months = require('../months');
 
 describe('PriorityQueue string Constructor', function() {

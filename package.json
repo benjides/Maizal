@@ -2,9 +2,16 @@
   "name": "maizal",
   "version": "0.1.0",
   "description": "Search algorithm framework to find and expand trees.",
-  "main": "index.js",
+  "main": "lib/maizal.js",
   "scripts": {
-    "test": "mocha --reporter spec"
+    "build": "npm run lint && babel --delete-dir-on-start -d lib/ src/",
+    "preversion": "npm test",
+    "prepublishOnly": "npm run build",
+    "lint": "eslint ./src",
+    "test": "nyc mocha test/unit/*.js --reporter spec",
+    "size": "size-limit",
+    "posttest": "size-limit",
+    "clean": "rm ./lib"
   },
   "repository": {
     "type": "git",
@@ -17,18 +24,28 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-minify": "^0.5.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "grunt": "^1.0.3",
-    "grunt-cli": "^1.2.0",
-    "grunt-contrib-clean": "^1.1.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "grunt-eslint": "^20.1.0",
-    "grunt-mocha-test": "^0.13.3",
-    "grunt-webpack": "^1.0.18",
-    "load-grunt-tasks": "^3.5.2",
+    "eslint": "^5.8.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
     "mocha": "^5.2.0",
-    "webpack": "^4.0.0",
-    "webpack-dev-server": "^3.1.9"
-  }
+    "nyc": "^13.1.0",
+    "size-limit": "^0.21.0"
+  },
+  "nyc": {
+    "reporter": [
+      "lcov",
+      "text"
+    ]
+  },
+  "size-limit": [
+    {
+      "path": "lib/maizal.js",
+      "limit": "2 KB"
+    }
+  ]
 }

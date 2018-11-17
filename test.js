@@ -1,6 +1,10 @@
-module.exports = {
+const maizal = require('./lib/maizal');
+const corridor = require('./test/corridor');
+
+
+maizal.dijkstra({
   initial: {
-    position: 1,
+    position: 3,
   },
   goals: {
     position: 4,
@@ -8,8 +12,9 @@ module.exports = {
   actions: [
     {
       name: 'right',
+      cost: 40,
       expand: (state) => {
-        if (state.position + 1 > 4) return undefined;
+        if (state.position + 1 > 5) return undefined;
         return { position: state.position + 1 };
       },
     },
@@ -22,4 +27,4 @@ module.exports = {
     },
   ],
   hash: 'position',
-};
+}).then(tree => console.log(tree));
