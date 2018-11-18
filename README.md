@@ -153,6 +153,7 @@ const goals = {
 |name   | String    | 'expand' | true     | Action name |
 |cost   | Int       | 1        | true     | Action cost |
 |expand | Function  |          | false    | Function that takes a state as argument and returns the data for the following states |
+
 Examples
 ```js
 const actions = [
@@ -178,18 +179,33 @@ const actions = [
   },
 ];
 
-const goals = {
-  height: 200,
-};
 ```
-> **NOTE:** Remenber to return `undefined` or simply `return` on forbidden actions to avoid generating infinite states
+> **NOTE:** Remember to return `undefined` or simply `return` on forbidden actions to avoid generating infinite states
 
+### Hash
+
+Used to establish when two newly generated states are essentially the same , for example, in a maze going to the left one cell and the returning to the same represents essentially the same state and we do not want that
+
+| Type   | Defaults | Optional | Description                 |
+|--------|----------|----------|-----------------------------|
+| String\|Function|          | false    | Field or function to determine the equality of two states |
+
+Examples
+
+```js
+const hash = 'position';
+
+const hash = 'height';
+
+const hash = (state) => `${state.x},${state.x}`;
+```
 
 A better documentation its on the way.
 
 ## Engines
 
 Available engines
+
 | Engine        | API      |
 |---------------|----------|
 | Breadth-first | bfs      |
