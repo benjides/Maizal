@@ -18,6 +18,11 @@ Using npm:
 $ npm install maizal
 ```
 
+In the browser
+```
+<script src="https://unpkg.com/maizal/dist/maizal.min.js"></script>
+```
+
 ## Usage
 
 Perform a `Breadth-first` search
