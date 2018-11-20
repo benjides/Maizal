@@ -7,5 +7,5 @@
  * admissability: false
  */
 module.exports = {
-  evaluationFn: () => Math.floor(Math.random() * 100),
+  evaluationFn: () => Math.round(Math.random()) - 1,
 };
