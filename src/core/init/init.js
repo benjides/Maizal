@@ -9,7 +9,6 @@ const HashSet = require('../../util/HashSet');
  * @returns {PriorityQueue}
  */
 function initPool(goals, { initial, engine: { evaluationFn } }) {
-  console.log(evaluationFn);
   if (!initial) {
     throw new Error('Missing initial state');
   }
