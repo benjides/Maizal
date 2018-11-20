@@ -8,7 +8,8 @@ const HashSet = require('../../util/HashSet');
  * @param {String|Function} evaluationFn Function to place a state in the PriorityQueue
  * @returns {PriorityQueue}
  */
-function initPool(goals, { initial, evaluationFn }) {
+function initPool(goals, { initial, engine: { evaluationFn } }) {
+  console.log(evaluationFn);
   if (!initial) {
     throw new Error('Missing initial state');
   }

@@ -15,10 +15,10 @@ function PriorityQueue(priorityFunction) {
       };
       break;
     case 'function':
-      this.priorityFn = (a, b) => priorityFunction(a) - priorityFunction(b);
+      this.priorityFn = priorityFunction;
       break;
     default:
-      this.priorityFn = () => 1;
+      throw new Error('The priorityFunction must be provided');
   }
   this.queue = [];
 }
