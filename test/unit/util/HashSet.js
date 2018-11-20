@@ -1,7 +1,7 @@
 
 const { expect } = require('chai');
-const HashSet = require('../../src/util/HashSet');
-const months = require('../months');
+const HashSet = require('../../../src/util/HashSet');
+const months = require('../../months');
 
 describe('HashSet string Constructor using an integer field', () => {
   const set = new HashSet('index');

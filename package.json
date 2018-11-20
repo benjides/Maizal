@@ -11,7 +11,7 @@
     "postversion": "git push && git push --tags",
     "prepublishOnly": "npm run build",
     "lint": "eslint ./src",
-    "test": "nyc mocha test/unit/*.js --reporter spec",
+    "test": "nyc mocha test/unit/*/*.js --reporter spec",
     "clean": "rm -r ./lib && rm -r ./dist"
   },
   "repository": {

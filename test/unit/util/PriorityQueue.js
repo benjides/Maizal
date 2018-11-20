@@ -1,6 +1,6 @@
 const { expect } = require('chai');
-const PriorityQueue = require('../../src/util/PriorityQueue');
-const months = require('../months');
+const PriorityQueue = require('../../../src/util/PriorityQueue');
+const months = require('../../months');
 
 describe('PriorityQueue string Constructor', () => {
   const q = new PriorityQueue('index');
