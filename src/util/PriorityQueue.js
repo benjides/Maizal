@@ -34,7 +34,7 @@ PriorityQueue.prototype.enqueue = function (element) {
     return this.enqueueArray(element);
   }
   for (let i = 0; i < this.queue.length; i += 1) {
-    if (this.priorityFn(this.queue[i], element) >= 0) {
+    if (this.priorityFn(this.queue[i], element) > 0) {
       this.queue.splice(i, 0, element);
       return i;
     }

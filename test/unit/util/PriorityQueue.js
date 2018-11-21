@@ -48,11 +48,11 @@ describe('PriorityQueue function Constructor', () => {
   it('An element should be enqueued first if its priority is higher', () => {
     expect(q.enqueue(months[8])).to.eq(0);
   });
-  it('An element with same priority will be inserted first', () => {
-    expect(q.enqueue({ index: 9, name: 'NoJanuary' })).to.eq(0);
+  it('An element with same priority will be inserted after', () => {
+    expect(q.enqueue({ index: 9, name: 'NoJanuary' })).to.eq(1);
   });
   it('Dequeueing should return the top element', () => {
-    expect(q.dequeue().name).to.eq('NoJanuary');
+    expect(q.dequeue().name).to.eq('September');
   });
   it('Any array should be added according to their priority regarding the order', () => {
     q.enqueue(months);
