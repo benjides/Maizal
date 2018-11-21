@@ -13,13 +13,13 @@ describe('Simple Random corridor search', () => {
   it('A simple search should reach the last position in the corridor', () => expect(maizal.random(corridor).then(({ solution }) => solution.pop().data.position)).to.eventually.eq(4));
   it('A random search with several solutions must return a solution', () => {
     c = Object.assign({}, corridor);
-    c.initial = { position: 2 };
+    c.initial = { position: 3 };
     c.goals = [{
-      position: 0,
+      position: 2,
     }, {
       position: 4,
     }];
-    return expect(maizal.random(c).then(({ solution }) => solution.pop().data.position)).to.eventually.be.oneOf([0, 4]);
+    return expect(maizal.random(c).then(({ solution }) => solution.pop().data.position)).to.eventually.be.oneOf([2, 4]);
   });
   it('If the final states are not reachable the search should be rejected', () => {
     c = Object.assign({}, corridor);
