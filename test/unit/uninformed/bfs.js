@@ -20,6 +20,15 @@ describe('Simple BFS corridor search', () => {
     }];
     return expect(maizal.bfs(c).then(({ solution }) => solution.pop().data.position)).to.eventually.eq(2);
   });
+  it('In case there a two optimal solutions the first defined action should prioritize', () => {
+    c = Object.assign({}, corridor);
+    c.goals = [{
+      position: 0,
+    }, {
+      position: 2,
+    }];
+    return expect(maizal.bfs(c).then(({ solution }) => solution.pop().action)).to.eventually.eq(c.actions[0].name);
+  });
   it('If the final states are not reachable the search should be rejected', () => {
     c = Object.assign({}, corridor);
     c.actions = {
