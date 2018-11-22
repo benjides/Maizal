@@ -1,6 +1,6 @@
 {
   "name": "maizal",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Search algorithm framework to find and expand trees.",
   "main": "lib/maizal.js",
   "scripts": {
