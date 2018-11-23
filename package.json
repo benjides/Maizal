@@ -1,6 +1,6 @@
 {
   "name": "maizal",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Search algorithm framework to find and expand trees.",
   "main": "lib/maizal.js",
   "scripts": {
@@ -15,9 +15,9 @@
     "clean": "rm -r ./lib && rm -r ./dist"
   },
   "files": [
-      "src",
-      "lib",
-      "dist/*.js"
+    "src",
+    "lib",
+    "dist/*.js"
   ],
   "repository": {
     "type": "git",
