@@ -216,6 +216,7 @@ Available engines
 | Breadth-first | bfs      |
 | Dijkstra      | dijkstra |
 | Random-search | random   |
+| Depth-first   | dfs      |
 
 ## Promises
 
