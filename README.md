@@ -202,7 +202,7 @@ const hash = 'position';
 
 const hash = 'height';
 
-const hash = (state) => `${state.x},${state.x}`;
+const hash = (state) => `${state.x},${state.y}`;
 ```
 
 A better documentation its on the way.
