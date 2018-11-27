@@ -1,11 +1,6 @@
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
+const { expect } = require('chai');
 const maizal = require('../../../src/maizal');
 const corridor = require('../../corridor');
-
-const { expect } = chai;
-
-chai.use(chaiAsPromised);
 
 let c = {};
 
