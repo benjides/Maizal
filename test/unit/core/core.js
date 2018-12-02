@@ -1,10 +1,21 @@
 const { expect } = require('chai');
+const sinon = require('sinon');
 const maizal = require('../../../src/maizal');
+const Maizal = require('../../../src/core/Maizal');
+const { bfs } = require('../../../src/engine/engines');
 const corridor = require('../../corridor');
+
+afterEach(() => {
+  sinon.restore();
+});
 
 let c = {};
 
-describe('Simple Base corridor search', () => {
+// All the core functionalities of maizal goes here
+
+// For specific engine funcitonalty go to the dedicated test file
+
+describe('Simple core base corridor search testing', () => {
   it('A simple search should reach the last position in the corridor', async () => {
     const res = await maizal.bfs(corridor);
     it('The search should provide the solution found and the stats', () => {
@@ -42,7 +53,7 @@ describe('Simple Base corridor search', () => {
     return expect(maizal.bfs(c)).to.be.rejected;
   });
   it('Chain two maizal searches', async () => {
-    maizal.bfs(corridor);
+    await maizal.bfs(corridor);
     c = Object.assign({}, corridor);
     c.goals = {
       position: 2,
@@ -51,6 +62,65 @@ describe('Simple Base corridor search', () => {
     expect(stats.nodes).to.eq(1);
     expect(solution.pop().data.position).to.eq(c.goals.position);
   });
+
+  describe('Checking hashing function call assertions', () => {
+    it('Checking called assertions on the closed set hash function', async () => {
+      c = Object.assign({}, corridor);
+      c.engine = bfs;
+      // Remove limitations to better calculate function callings
+      c.actions = [
+        {
+          name: 'right',
+          expand: ({ position }) => ({ position: position + 1 }),
+        },
+        {
+          name: 'left',
+          expand: ({ position }) => ({ position: position - 1 }),
+        },
+      ];
+      const m = new Maizal(c);
+      const hash = sinon.spy(m.closed, 'hashFn');
+      const { stats } = await m.solve();
+
+      // The hash function is called twice per closed state (has, add)
+      // The hash function is called once per iteration (state closed) per action (each action generates a new state)
+      sinon.assert.callCount(hash, stats.nodes * 2 * c.actions.length);
+    });
+    it('The hash function is called for each new state to determine if it is a goal state including the initial', async () => {
+      c = Object.assign({}, corridor);
+      c.engine = bfs;
+      const m = new Maizal(c);
+      const hash = sinon.spy(m.goals, 'hashFn');
+      await m.solve();
+      // Being BFS every single state must be checked and therefore called
+      sinon.assert.callCount(hash, 4);
+    });
+  });
+
+  describe('Checking priority function call assertions', () => {
+    it('The evaluation function is called only once to reach the next cell', async () => {
+      c = Object.assign({}, corridor);
+      c.engine = bfs;
+      c.goals = {
+        position: 2,
+      };
+      const m = new Maizal(c);
+      const priority = sinon.spy(m.pool, 'priorityFn');
+      await m.solve();
+      // This is called once, the first element is inserted at the beggining (no call) and the next is placed after (1 call)
+      sinon.assert.calledOnce(priority);
+    });
+    it('The evaluation function is called twice to reach the end of the corridor', async () => {
+      c = Object.assign({}, corridor);
+      c.engine = bfs;
+      const m = new Maizal(c);
+      const priority = sinon.spy(m.pool, 'priorityFn');
+      await m.solve();
+      // This is tricky. As elements are removed there is no need to call the priority function for every new state
+      sinon.assert.callCount(priority, 2);
+    });
+  });
+
   describe('Initial set testing', () => {
     it('If the intial is the goal should not expand any action', async () => {
       c = Object.assign({}, corridor);
@@ -72,6 +142,25 @@ describe('Simple Base corridor search', () => {
     });
   });
   describe('Action testing', () => {
+    it('Ensure the actions expand functions are called', async () => {
+      c = Object.assign({}, corridor);
+      c.engine = bfs;
+      const right = sinon.spy(c.actions[0], 'expand');
+      const left = sinon.spy(c.actions[1], 'expand');
+      const m = new Maizal(c);
+      await m.solve();
+      sinon.assert.called(right);
+      sinon.assert.called(left);
+    });
+    it('The expand actions should be called in order', async () => {
+      c = Object.assign({}, corridor);
+      c.engine = bfs;
+      const right = sinon.spy(c.actions[0], 'expand');
+      const left = sinon.spy(c.actions[1], 'expand');
+      const m = new Maizal(c);
+      await m.solve();
+      sinon.assert.callOrder(right, left);
+    });
     it('Promise actions are supported and the robot shall reach the end of the corridor', async () => {
       c = Object.assign({}, corridor);
       c.actions = {
@@ -122,8 +211,10 @@ describe('Simple Base corridor search', () => {
     it('Function hashes are allowed', async () => {
       c = Object.assign({}, corridor);
       c.hash = ({ position }) => position + 15;
-      const { solution, stats } = await maizal.bfs(c);
+      const hash = sinon.spy(c, 'hash');
+      const { solution } = await maizal.bfs(c);
       expect(solution).to.have.length(4);
+      sinon.assert.called(hash);
     });
     it('A search with no hash should be rejected', () => {
       c = Object.assign({}, corridor);
