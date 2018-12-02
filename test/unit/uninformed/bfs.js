@@ -1,121 +1,42 @@
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
+const { expect } = require('chai');
 const maizal = require('../../../src/maizal');
 const corridor = require('../../corridor');
-
-const { expect } = chai;
-
-chai.use(chaiAsPromised);
 
 let c = {};
 
 describe('Simple BFS corridor search', () => {
-  it('A simple search should reach the last position in the corridor', () => expect(maizal.bfs(corridor).then(({ solution }) => solution.pop().data.position)).to.eventually.eq(4));
-  it('A better solution must prioritize over a worse one', () => {
+  it('A simple search should reach the last position in the corridor', async () => {
+    const { solution } = await maizal.bfs(corridor);
+    expect(solution.pop().data.position).to.eq(corridor.goals.position);
+  });
+  it('A better solution must prioritize over a worse one', async () => {
     c = Object.assign({}, corridor);
     c.goals = [{
       position: 2,
     }, {
       position: 4,
     }];
-    return expect(maizal.bfs(c).then(({ solution }) => solution.pop().data.position)).to.eventually.eq(2);
+    const { solution } = await maizal.bfs(c);
+    expect(solution.pop().data.position).to.eq(c.goals[0].position);
   });
-  it('In case there a two optimal solutions the first defined action should prioritize', () => {
+  it('A better solution must prioritize over a worse one', async () => {
+    c = Object.assign({}, corridor);
+    c.goals = [{
+      position: 4,
+    }, {
+      position: 0,
+    }];
+    const { solution } = await maizal.bfs(c);
+    expect(solution.pop().data.position).to.eq(c.goals[1].position);
+  });
+  it('In case there a two optimal solutions the first defined action should prioritize', async () => {
     c = Object.assign({}, corridor);
     c.goals = [{
       position: 0,
     }, {
       position: 2,
     }];
-    return expect(maizal.bfs(c).then(({ solution }) => solution.pop().action)).to.eventually.eq(c.actions[0].name);
-  });
-  it('If the final states are not reachable the search should be rejected', () => {
-    c = Object.assign({}, corridor);
-    c.actions = {
-      expand: ({ position }) => Promise.resolve({ position }),
-    };
-    return expect(maizal.bfs(c).then(({ solution }) => solution)).to.be.rejected;
-  });
-  it('Chain two maizal searches', () => {
-    maizal.bfs(corridor);
-    c = Object.assign({}, corridor);
-    c.goals = {
-      position: 0,
-    };
-    return expect(maizal.bfs(c).then(({ solution }) => solution.pop().data.position)).to.eventually.eq(0);
-  });
-  describe('Initial set testing', () => {
-    it('If the intial is the goal should not expand any action', () => {
-      c = Object.assign({}, corridor);
-      c.goals = { position: 1 };
-      return expect(maizal.bfs(c).then(({ solution }) => solution)).to.eventually.have.length(1);
-    });
-    it('A search cannot start without an initial state', () => {
-      c = Object.assign({}, corridor);
-      delete c.initial;
-      return expect(maizal.bfs(c).then(({ solution }) => solution)).to.be.rejected;
-    });
-    it('A search cannot start with an empty initial state', () => {
-      c = Object.assign({}, corridor);
-      c.initial = {};
-      return expect(maizal.bfs(c).then(({ solution }) => solution)).to.be.rejected;
-    });
-  });
-  describe('Action testing', () => {
-    it('Promise actions are supported and the robot shall reach the end of the corridor', () => {
-      c = Object.assign({}, corridor);
-      c.actions = {
-        expand: ({ position }) => Promise.resolve({ position: position + 1 }),
-      };
-      return expect(maizal.bfs(c).then(({ solution }) => solution.pop().data.position)).to.eventually.eq(4);
-    });
-    it('A search with no actions should be rejected', () => {
-      c = Object.assign({}, corridor);
-      c.actions = {};
-      return expect(maizal.bfs(c).then(({ solution }) => solution)).to.be.rejected;
-    });
-    it('An empty expand function should be rejected', () => {
-      c = Object.assign({}, corridor);
-      c.actions = {
-        name: 'IdoNotHaveExpand',
-      };
-      return expect(maizal.bfs(c).then(({ solution }) => solution)).to.be.rejected;
-    });
-    it('Actions returning several states are allowed', () => {
-      c = Object.assign({}, corridor);
-      c.actions = {
-        expand: ({ position }) => {
-          if (position > 5 || position < 0) {
-            return undefined;
-          }
-          return [{ position: position + 1 }, { position: position - 1 }];
-        },
-      };
-      return expect(maizal.bfs(c).then(({ solution }) => solution.pop().data.position)).to.eventually.eq(4);
-    });
-  });
-  describe('Hash testing', () => {
-    it('Function hashes are allowed', () => {
-      c = Object.assign({}, corridor);
-      c.hash = ({ position }) => position + 15;
-      return expect(maizal.bfs(c).then(({ solution }) => solution)).to.eventually.have.length(4);
-    });
-    it('A search with no hash should be rejected', () => {
-      c = Object.assign({}, corridor);
-      delete c.hash;
-      return expect(maizal.bfs(c).then(({ solution }) => solution)).to.be.rejected;
-    });
-    it('A non existing hash should be rejected', () => {
-      c = Object.assign({}, corridor);
-      c.hash = 'IdoNotExist';
-      return expect(maizal.bfs(c).then(({ solution }) => solution)).to.be.rejected;
-    });
-  });
-  describe('Goals testing', () => {
-    it('A search with no goals should be rejected', () => {
-      c = Object.assign({}, corridor);
-      delete c.goals;
-      return expect(maizal.bfs(c).then(({ solution }) => solution)).to.be.rejected;
-    });
+    const { solution } = await maizal.bfs(c);
+    expect(solution.pop().action).to.eq(c.actions[0].name);
   });
 });
