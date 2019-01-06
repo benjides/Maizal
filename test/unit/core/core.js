@@ -1,5 +1,6 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
+const { to } = require('await-to-js');
 const maizal = require('../../../src/maizal');
 const Maizal = require('../../../src/core/Maizal');
 const { bfs } = require('../../../src/engine/engines');
@@ -45,12 +46,14 @@ describe('Simple core base corridor search testing', () => {
       expect(stats.nodes).to.eq(3);
     });
   });
-  it('If the final states are not reachable the search should be rejected', () => {
+  it('If the final states are not reachable the search should be rejected', async () => {
     c = Object.assign({}, corridor);
     c.actions = {
       expand: ({ position }) => Promise.resolve({ position }),
     };
-    return expect(maizal.bfs(c)).to.be.rejected;
+    const [err, data] = await to(maizal.bfs(c));
+    expect(err).to.be.an('error');
+    expect(data).to.be.an('undefined');
   });
   it('Chain two maizal searches', async () => {
     await maizal.bfs(corridor);
@@ -130,15 +133,19 @@ describe('Simple core base corridor search testing', () => {
       expect(solution[0].data.position).to.eq(c.goals.position);
       expect(stats.nodes).to.eq(0);
     });
-    it('A search cannot start without an initial state', () => {
+    it('A search cannot start without an initial state', async () => {
       c = Object.assign({}, corridor);
       delete c.initial;
-      return expect(maizal.dfs(c)).to.be.rejected;
+      const [err, data] = await to(maizal.bfs(c));
+      expect(err).to.be.an('error');
+      expect(data).to.be.an('undefined');
     });
-    it('A search cannot start with an empty initial state', () => {
+    it('A search cannot start with an empty initial state', async () => {
       c = Object.assign({}, corridor);
       c.initial = {};
-      return expect(maizal.random(c)).to.be.rejected;
+      const [err, data] = await to(maizal.bfs(c));
+      expect(err).to.be.an('error');
+      expect(data).to.be.an('undefined');
     });
   });
   describe('Action testing', () => {
@@ -172,24 +179,30 @@ describe('Simple core base corridor search testing', () => {
       expect(final.action).to.eq('expand');
       expect(stats.nodes).to.eq(3);
     });
-    it('A search with no actions should be rejected', () => {
+    it('A search with no actions should be rejected', async () => {
       c = Object.assign({}, corridor);
       c.actions = {};
-      return expect(maizal.bfs(c)).to.be.rejected;
+      const [err, data] = await to(maizal.bfs(c));
+      expect(err).to.be.an('error');
+      expect(data).to.be.an('undefined');
     });
-    it('An empty expand function should be rejected', () => {
+    it('An empty expand function should be rejected', async () => {
       c = Object.assign({}, corridor);
       c.actions = {
         name: 'IdoNotHaveExpand',
       };
-      return expect(maizal.bfs(c)).to.be.rejected;
+      const [err, data] = await to(maizal.bfs(c));
+      expect(err).to.be.an('error');
+      expect(data).to.be.an('undefined');
     });
-    it('Newly generated states should be able to be hashed', () => {
+    it('Newly generated states should be able to be hashed', async () => {
       c = Object.assign({}, corridor);
       c.actions = {
         expand: () => ({ notPosition: 3 }),
       };
-      return expect(maizal.bfs(c)).to.be.rejected;
+      const [err, data] = await to(maizal.bfs(c));
+      expect(err).to.be.an('error');
+      expect(data).to.be.an('undefined');
     });
     it('Actions returning several states are allowed', async () => {
       c = Object.assign({}, corridor);
@@ -216,22 +229,28 @@ describe('Simple core base corridor search testing', () => {
       expect(solution).to.have.length(4);
       sinon.assert.called(hash);
     });
-    it('A search with no hash should be rejected', () => {
+    it('A search with no hash should be rejected', async () => {
       c = Object.assign({}, corridor);
       delete c.hash;
-      return expect(maizal.bfs(c)).to.be.rejected;
+      const [err, data] = await to(maizal.bfs(c));
+      expect(err).to.be.an('error');
+      expect(data).to.be.an('undefined');
     });
-    it('A non existing hash should be rejected', () => {
+    it('A non existing hash should be rejected', async () => {
       c = Object.assign({}, corridor);
       c.hash = 'IdoNotExist';
-      return expect(maizal.bfs(c)).to.be.rejected;
+      const [err, data] = await to(maizal.bfs(c));
+      expect(err).to.be.an('error');
+      expect(data).to.be.an('undefined');
     });
   });
   describe('Goals testing', () => {
-    it('A search with no goals should be rejected', () => {
+    it('A search with no goals should be rejected', async () => {
       c = Object.assign({}, corridor);
       delete c.goals;
-      return expect(maizal.bfs(c)).to.be.rejected;
+      const [err, data] = await to(maizal.bfs(c));
+      expect(err).to.be.an('error');
+      expect(data).to.be.an('undefined');
     });
   });
 });
