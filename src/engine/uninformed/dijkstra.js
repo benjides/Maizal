@@ -7,5 +7,5 @@
  * admissability: false
  */
 module.exports = {
-  evaluationFn: 'cost',
+  evaluationFn: ({ cost }) => cost,
 };

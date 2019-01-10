@@ -2,8 +2,8 @@ const { expect } = require('chai');
 const PriorityQueue = require('../../../src/util/PriorityQueue');
 const months = require('../../months');
 
-describe('PriorityQueue string Constructor', () => {
-  const q = new PriorityQueue('index');
+describe('PriorityQueue ascending order elements', () => {
+  const q = new PriorityQueue(({ index }) => index);
   it('An element should be inserted', () => {
     expect(q.enqueue(months[5])).to.eq(0);
   });
@@ -15,7 +15,7 @@ describe('PriorityQueue string Constructor', () => {
   });
   it('An empty queue cannot dequeue its elements', () => {
     q.dequeue();
-    expect(q.dequeue()).to.be.undefined;
+    expect(q.dequeue()).to.be.an('undefined');
   });
   it('An empty queue should not contains elements', () => {
     expect(q.size()).to.be.eq(0);
@@ -40,8 +40,8 @@ describe('PriorityQueue string Constructor', () => {
   });
 });
 
-describe('PriorityQueue function Constructor', () => {
-  const q = new PriorityQueue((queue, toInsert) => toInsert.index - queue.index);
+describe('PriorityQueue reverse order', () => {
+  const q = new PriorityQueue(toInsert => -toInsert.index);
   it('An element should be inserted first if the queue is empty', () => {
     expect(q.enqueue(months[5])).to.eq(0);
   });
@@ -60,18 +60,18 @@ describe('PriorityQueue function Constructor', () => {
   });
 });
 
-describe('PriorityQueue no constructur', () => {
+describe('PriorityQueue no constructor', () => {
   it('A Queue cannot be created if no argument is provided', () => {
     expect(() => new PriorityQueue()).to.throw();
   });
 });
 
-describe('Priority Queue string Constructor using a not existent field', () => {
-  const q = new PriorityQueue('iDoNotExist');
-  it('An element is inserted but only once', () => {
-    expect(() => q.enqueue(months[3])).to.not.throw();
+describe('PriorityQueue undefined priority', () => {
+  const q = new PriorityQueue(() => undefined);
+  it('Undefined priorities can only be inserted on top', () => {
+    expect(q.enqueue(months[2])).to.be.eq(0);
   });
-  it('An array cannot be inserted and an error thrown', () => {
-    expect(() => q.enqueue(months)).to.throw();
+  it('Undefined priorities must not be inserted', () => {
+    expect(q.enqueue(months[5])).to.be.an('undefined');
   });
 });

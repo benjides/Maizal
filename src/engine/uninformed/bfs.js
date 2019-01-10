@@ -7,5 +7,5 @@
  * admissability: true
  */
 module.exports = {
-  evaluationFn: 'depth',
+  evaluationFn: ({ depth }) => depth,
 };

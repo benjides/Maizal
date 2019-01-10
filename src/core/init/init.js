@@ -4,18 +4,21 @@ const HashSet = require('../../util/HashSet');
 /**
  * Defines the pool of yet unexplored states
  *
- * @param {Object} initial Intial state of the search
- * @param {String|Function} evaluationFn Function to place a state in the PriorityQueue
+ * @param {HashSet} goals HashSet containing the user defined goals
+ * @param {Object} config User defined search configuration
  * @returns {PriorityQueue}
  */
-function initPool(goals, { initial, engine: { evaluationFn } }) {
-  if (!initial) {
+function initPool(goals, config) {
+  if (!config.initial) {
     throw new Error('Missing initial state');
   }
+
+  const evaluationFn = state => config.engine.evaluationFn(state, config);
+
   const pool = new PriorityQueue(evaluationFn);
   pool.enqueue({
-    final: goals.has(initial),
-    data: initial,
+    final: goals.has(config.initial),
+    data: config.initial,
   });
   return pool;
 }

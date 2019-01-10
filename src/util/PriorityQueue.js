@@ -1,25 +1,19 @@
 /**
  * Creates a new PriorityQueue
  *
- * @param {Function|Field} priorityFunction Field or function to place the element
+ * @param {Function} priorityFunction Function over a element to state its integer priority
  * @constructor
  */
 function PriorityQueue(priorityFunction) {
-  switch (typeof priorityFunction) {
-    case 'string':
-      this.priorityFn = (a, b) => {
-        if (b[priorityFunction] === undefined) {
-          throw new Error(`Undefined was returned by priority function on object ${JSON.stringify(b)}`);
-        }
-        return a[priorityFunction] - b[priorityFunction];
-      };
-      break;
-    case 'function':
-      this.priorityFn = priorityFunction;
-      break;
-    default:
-      throw new Error('The priorityFunction must be provided');
+  if (!priorityFunction) {
+    throw new Error('The priority function for an element must be provided');
   }
+  this.priorityFn = (current, insert) => {
+    if (!priorityFunction(insert)) {
+      return undefined;
+    }
+    return priorityFunction(current) - priorityFunction(insert) > 0;
+  };
   this.queue = [];
 }
 
@@ -34,9 +28,13 @@ PriorityQueue.prototype.enqueue = function (element) {
     return this.enqueueArray(element);
   }
   for (let i = 0; i < this.queue.length; i += 1) {
-    if (this.priorityFn(this.queue[i], element) > 0) {
-      this.queue.splice(i, 0, element);
-      return i;
+    switch (this.priorityFn(this.queue[i], element)) {
+      case true:
+        this.queue.splice(i, 0, element);
+        return i;
+      case undefined:
+        return undefined;
+      // no default
     }
   }
   return this.queue.push(element) - 1;
