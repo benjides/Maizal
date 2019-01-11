@@ -108,7 +108,7 @@ describe('Simple core base corridor search testing', () => {
         position: 2,
       };
       const m = new Maizal(c);
-      const priority = sinon.spy(m.pool, 'priorityFn');
+      const priority = sinon.spy(m.poll, 'priorityFn');
       await m.solve();
       // This is called once, the first element is inserted at the beggining (no call) and the next is placed after (1 call)
       sinon.assert.calledOnce(priority);
@@ -117,7 +117,7 @@ describe('Simple core base corridor search testing', () => {
       c = Object.assign({}, corridor);
       c.engine = bfs;
       const m = new Maizal(c);
-      const priority = sinon.spy(m.pool, 'priorityFn');
+      const priority = sinon.spy(m.poll, 'priorityFn');
       await m.solve();
       // This is tricky. As elements are removed there is no need to call the priority function for every new state
       sinon.assert.callCount(priority, 2);

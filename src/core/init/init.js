@@ -2,25 +2,25 @@ const PriorityQueue = require('../../util/PriorityQueue');
 const HashSet = require('../../util/HashSet');
 
 /**
- * Defines the pool of yet unexplored states
+ * Defines the poll of yet unexplored states
  *
  * @param {HashSet} goals HashSet containing the user defined goals
  * @param {Object} config User defined search configuration
  * @returns {PriorityQueue}
  */
-function initPool(goals, config) {
+function initPoll(goals, config) {
   if (!config.initial) {
     throw new Error('Missing initial state');
   }
 
   const evaluationFn = state => config.engine.evaluationFn(state, config);
 
-  const pool = new PriorityQueue(evaluationFn);
-  pool.enqueue({
+  const poll = new PriorityQueue(evaluationFn);
+  poll.enqueue({
     final: goals.has(config.initial),
     data: config.initial,
   });
-  return pool;
+  return poll;
 }
 
 /**
@@ -77,7 +77,7 @@ function initGoals({ goals, hash }) {
  */
 function init(maizal, config) {
   maizal.goals = initGoals(config);
-  maizal.pool = initPool(maizal.goals, config);
+  maizal.poll = initPoll(maizal.goals, config);
   maizal.closed = initClosed(config);
   maizal.actions = initActions(config);
 }
