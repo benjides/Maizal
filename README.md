@@ -205,18 +205,51 @@ const hash = 'height';
 const hash = (state) => `${state.x},${state.y}`;
 ```
 
+### Heuristics
+
+Used to give a state a 'sense of approaching to the goal'.
+It is a function that returns decreasing values as the closer we get to the goal.
+It depends purely on your search state representation and you must ensure to provide logical and decreasing values the closer the solution is
+
+| Type   | Defaults | Optional | Description                 |
+|--------|----------|----------|-----------------------------|
+|Function|          | true     | Function to determine the 'proximity' to a goal |
+
+Examples
+
+```js
+const heuristics = ({ x, y }) => {
+  // Euclidean distance
+  return Math.sqrt(((x - goal.x) ** 2) + ((y - goal.y) ** 2));
+};
+
+const heuristics = ({ x, y }) => {
+  // Manhattan distance
+  return Math.abs((x - goal.x) + (y - goal.y));
+};
+
+const heuristics = state => 90 - state.position;
+```
+
 A better documentation its on the way.
 
 ## Engines
 
 Available engines
 
+### Uninformed
 | Engine        | API      |
 |---------------|----------|
 | Breadth-first | bfs      |
 | Dijkstra      | dijkstra |
 | Random-search | random   |
 | Depth-first   | dfs      |
+
+### Informed
+| Engine            | API      |
+|-------------------|----------|
+| Best-first search | bestfs   |
+
 
 ## Promises
 

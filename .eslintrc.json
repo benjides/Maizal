@@ -9,6 +9,7 @@
     "rules": {
       "func-names": ["error", "never"],
       "no-param-reassign": [2, { "props": false }],
-      "max-len": "off"
+      "max-len": "off",
+      "requireStringLiterals": false
     }
 }

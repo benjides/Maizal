@@ -69,6 +69,17 @@ function initGoals({ goals, hash }) {
   return g;
 }
 
+function setup(config) {
+  if (!config.engine.requires) {
+    return;
+  }
+  Object.keys(config.engine.requires).forEach((requirement) => {
+    if (typeof config[requirement] !== config.engine.requires[requirement]) {
+      throw new Error(`The search requires the field ${requirement} to be a ${config.engine.requires[requirement]}`);
+    }
+  });
+}
+
 /**
  * Sets the configuartion for the Maizal search
  *
@@ -76,6 +87,7 @@ function initGoals({ goals, hash }) {
  * @param {Object} config
  */
 function init(maizal, config) {
+  setup(config);
   maizal.goals = initGoals(config);
   maizal.poll = initPoll(maizal.goals, config);
   maizal.closed = initClosed(config);

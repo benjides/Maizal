@@ -253,4 +253,30 @@ describe('Simple core base corridor search testing', () => {
       expect(data).to.be.an('undefined');
     });
   });
+
+  describe('Informed search testing', () => {
+    it('Perform a simple Best-first search to reach the end of the corridor', async () => {
+      c = Object.assign({}, corridor);
+      const heuristics = sinon.spy(c, 'heuristics');
+      const { solution } = await maizal.bestfs(c);
+      expect(solution).to.have.length(4);
+      sinon.assert.called(heuristics);
+    });
+
+    it('Ensure the requirements of the search are fullfilled', async () => {
+      c = Object.assign({}, corridor);
+      delete c.heuristics;
+      const [err, data] = await to(maizal.bestfs(c));
+      expect(err).to.be.an('error');
+      expect(data).to.be.an('undefined');
+    });
+
+    it('Ensure the requirements match the expected datatype', async () => {
+      c = Object.assign({}, corridor);
+      c.heuristics = 'iAmNotAFunction';
+      const [err, data] = await to(maizal.bestfs(c));
+      expect(err).to.be.an('error');
+      expect(data).to.be.an('undefined');
+    });
+  });
 });

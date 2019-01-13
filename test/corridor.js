@@ -22,4 +22,5 @@ module.exports = {
     },
   ],
   hash: 'position',
+  heuristics: state => 4 - state.position,
 };
