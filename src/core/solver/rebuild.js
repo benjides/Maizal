@@ -9,7 +9,7 @@ function rebuild(goal) {
   let state = goal;
   while (state) {
     const {
-      parent, data, action, cost = 0, depth = 0,
+      parent, data, action, cost, depth,
     } = state;
     const s = {
       data, cost, depth,

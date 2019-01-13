@@ -13,8 +13,8 @@ const node = ({
   data,
   final,
   action: action.name,
-  cost: parent.cost + action.cost || action.cost,
-  depth: parent.depth + 1 || 1,
+  cost: parent.cost + action.cost,
+  depth: parent.depth + 1,
 });
 
 module.exports = node;
