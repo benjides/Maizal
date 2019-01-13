@@ -125,13 +125,15 @@ describe('Simple core base corridor search testing', () => {
   });
 
   describe('Initial set testing', () => {
-    it('If the intial is the goal should not expand any action', async () => {
+    it('If the initial is the goal should not expand any action', async () => {
       c = Object.assign({}, corridor);
       c.goals = { position: 1 };
       const { solution, stats } = await maizal.bfs(c);
       expect(solution).to.have.length(1);
       expect(solution[0].data.position).to.eq(c.goals.position);
       expect(stats.nodes).to.eq(0);
+      expect(stats.depth).to.eq(0);
+      expect(stats.cost).to.eq(0);
     });
     it('A search cannot start without an initial state', async () => {
       c = Object.assign({}, corridor);

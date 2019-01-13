@@ -19,6 +19,8 @@ function initPoll(goals, config) {
   poll.enqueue({
     final: goals.has(config.initial),
     data: config.initial,
+    depth: 0,
+    cost: 0,
   });
   return poll;
 }
