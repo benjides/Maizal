@@ -10,6 +10,6 @@
       "func-names": ["error", "never"],
       "no-param-reassign": [2, { "props": false }],
       "max-len": "off",
-      "requireStringLiterals": false
+      "valid-typeof": ["error", { "requireStringLiterals": false }]
     }
 }
