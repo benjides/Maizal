@@ -39,4 +39,12 @@ describe('Simple BFS corridor search', () => {
     const { solution } = await maizal.bfs(c);
     expect(solution.pop().action).to.eq(c.actions[0].name);
   });
+  it('Find the best solution on the left instead', async () => {
+    c = Object.assign({}, corridor);
+    c.goals = {
+      position: 0,
+    };
+    const { solution } = await maizal.bfs(c);
+    expect(solution.pop().data.position).to.eq(c.goals.position);
+  });
 });
