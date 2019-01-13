@@ -6,7 +6,8 @@ const dfs = require('./uninformed/dfs');
 
 // Informed
 const bestfs = require('./informed/bestfs');
+const astar = require('./informed/astar');
 
 module.exports = {
-  bfs, dijkstra, random, dfs, bestfs,
+  bfs, dijkstra, random, dfs, bestfs, astar,
 };

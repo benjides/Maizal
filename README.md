@@ -249,6 +249,7 @@ Available engines
 | Engine            | API      |
 |-------------------|----------|
 | Best-first search | bestfs   |
+| A*                | astar    |
 
 
 ## Promises
