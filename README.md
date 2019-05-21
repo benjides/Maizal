@@ -250,6 +250,7 @@ Available engines
 |-------------------|----------|
 | Best-first search | bestfs   |
 | A*                | astar    |
+| Weighted-A*       | weightedastar    |
 
 
 ## Promises
