@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { priorityQueue, values } from '../src/PriorityQueue.js'
+import { insert, priorityQueue, values } from '../src/PriorityQueue.js'
 
 type Month = {
   index: number
@@ -36,7 +36,37 @@ it('sorts values on creation', () => {
     {
       index: 1,
       name: 'February',
-    }
+    },
   ]
   expect(priorityQueueValues).toStrictEqual(expectedPriorityQueueValues)
+})
+
+it('inserts value at last position', () => {
+  const months: Month[] = [
+    {
+      index: 1,
+      name: 'February',
+    },
+  ]
+
+  const month: Month = {
+    index: 2,
+    name: 'March',
+  }
+
+  const priority = (month: Month) => month.index
+
+  const priorityQueueValues = insert(priority)(month)(priorityQueue(priority)(months))
+
+  const expectedPriorityQueueValues: Month[] = [
+    {
+      index: 1,
+      name: 'February',
+    },
+    {
+      index: 2,
+      name: 'March',
+    },
+  ]
+  expect(values(priorityQueueValues)).toStrictEqual(expectedPriorityQueueValues)
 })
