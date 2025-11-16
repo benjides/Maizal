@@ -109,4 +109,47 @@ describe('PriorityQueue insert', () => {
       expectedPriorityQueueValues,
     )
   })
+
+
+  it('inserts value at the middle position', () => {
+    const months: Month[] = [
+      {
+        index: 0,
+        name: 'January',
+      },
+      {
+        index: 2,
+        name: 'March',
+      },
+    ]
+
+    const month: Month = {
+      index: 1,
+      name: 'February',
+    }
+
+    const priority = (month: Month) => month.index
+
+    const priorityQueueValues = insert(priority)(month)(
+      priorityQueue(priority)(months),
+    )
+
+    const expectedPriorityQueueValues: Month[] = [
+      {
+        index: 0,
+        name: 'January',
+      },
+      {
+        index: 1,
+        name: 'February',
+      },
+      {
+        index: 2,
+        name: 'March',
+      },
+    ]
+    expect(values(priorityQueueValues)).toStrictEqual(
+      expectedPriorityQueueValues,
+    )
+  })
 })
