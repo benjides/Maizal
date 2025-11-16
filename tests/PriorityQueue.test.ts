@@ -110,7 +110,6 @@ describe('PriorityQueue insert', () => {
     )
   })
 
-
   it('inserts value at the middle position', () => {
     const months: Month[] = [
       {
@@ -154,13 +153,12 @@ describe('PriorityQueue insert', () => {
   })
 
   it('inserts after in case of same priority', () => {
-
     type Person = {
-      age: number,
-      name: string,
+      age: number
+      name: string
     }
 
-    const persons : Person[] = [
+    const persons: Person[] = [
       {
         age: 20,
         name: 'John',
@@ -200,5 +198,4 @@ describe('PriorityQueue insert', () => {
       expectedPriorityQueueValues,
     )
   })
-
 })
