@@ -1,4 +1,5 @@
 # Maizal
+
 <p align="center"><img width="200"src="maizal.png?raw=true"></p>
 
 > Pronounced like /'māisɔːl/
@@ -19,6 +20,7 @@ $ npm install maizal
 ```
 
 In the browser
+
 ```
 <script src="https://unpkg.com/maizal/dist/maizal.min.js"></script>
 ```
@@ -28,40 +30,42 @@ In the browser
 Perform a `Breadth-first` search
 
 ```js
-const maizal = require('maizal');
+const maizal = require('maizal')
 
-maizal.bfs({
-  initial: {
-    position: 1,
-  },
-  goals: {
-    position: 4,
-  },
-  actions: [
-    {
-      name: 'right',
-      expand: (state) => {
-        if (state.position + 1 > 5) return undefined;
-        return { position: state.position + 1 };
-      },
+maizal
+  .bfs({
+    initial: {
+      position: 1,
     },
-    {
-      name: 'left',
-      expand: (state) => {
-        if (state.position - 1 < 0) return undefined;
-        return { position: state.position - 1 };
-      },
+    goals: {
+      position: 4,
     },
-  ],
-  hash: 'position',
-})
-.then(results => console.log(results))
-.catch(error => console.log(error));
+    actions: [
+      {
+        name: 'right',
+        expand: (state) => {
+          if (state.position + 1 > 5) return undefined
+          return { position: state.position + 1 }
+        },
+      },
+      {
+        name: 'left',
+        expand: (state) => {
+          if (state.position - 1 < 0) return undefined
+          return { position: state.position - 1 }
+        },
+      },
+    ],
+    hash: 'position',
+  })
+  .then((results) => console.log(results))
+  .catch((error) => console.log(error))
 ```
 
 Perform a `Dijkstra` search
+
 ```js
-const maizal = require('maizal');
+const maizal = require('maizal')
 
 const config = {
   initial: {
@@ -75,15 +79,15 @@ const config = {
       name: 'right',
       cost: 50,
       expand: (state) => {
-        if (state.position + 1 > 5) return undefined;
-        return { position: state.position + 1 };
+        if (state.position + 1 > 5) return undefined
+        return { position: state.position + 1 }
       },
     },
     {
       name: 'left',
       expand: (state) => {
-        if (state.position - 1 < 0) return undefined;
-        return { position: state.position - 1 };
+        if (state.position - 1 < 0) return undefined
+        return { position: state.position - 1 }
       },
     },
   ],
@@ -92,17 +96,16 @@ const config = {
 
 async function solveCorridor() {
   try {
-    const results = await maizal.dijkstra(config);
-    console.log(results);
+    const results = await maizal.dijkstra(config)
+    console.log(results)
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
 }
 ```
 
 > **NOTE:** `async/await` is part of ECMAScript 2017 and is not supported in Internet
 > Explorer and older browsers, so use with caution.
-
 
 ## Documentation
 
@@ -111,27 +114,29 @@ The config object
 ### Initial state
 
 | Type   | Defaults | Optional | Description                 |
-|--------|----------|----------|-----------------------------|
+| ------ | -------- | -------- | --------------------------- |
 | Object |          | false    | Initial state of the search |
 
 Examples
+
 ```js
 const initial = {
   position: [4, 5],
-};
+}
 
 const initial = {
   name: 'myFancyName',
-};
+}
 ```
 
 ### Goals
 
-| Type   | Defaults | Optional | Description                 |
-|--------|----------|----------|-----------------------------|
+| Type            | Defaults | Optional | Description         |
+| --------------- | -------- | -------- | ------------------- |
 | Object \| Array |          | false    | Set of goals states |
 
 Examples
+
 ```js
 const goals = [
   {
@@ -139,70 +144,71 @@ const goals = [
   },
   {
     position: [4, 2],
-  }
-];
+  },
+]
 
 const goals = {
   height: 200,
-};
+}
 ```
 
 ### Actions
 
-| Type   | Defaults | Optional | Description                 |
-|--------|----------|----------|-----------------------------|
+| Type            | Defaults | Optional | Description                               |
+| --------------- | -------- | -------- | ----------------------------------------- |
 | Object \| Array |          | false    | Set of actions to take for each new state |
 
-|Key    | Type      | Defaults | Optional | Description                 |
-|-------|-----------|----------|----------|-----------------------------|
-|name   | String    | 'expand' | true     | Action name |
-|cost   | Int       | 1        | true     | Action cost |
-|expand | Function  |          | false    | Function that takes a state as argument and returns the data for the following states |
+| Key    | Type     | Defaults | Optional | Description                                                                           |
+| ------ | -------- | -------- | -------- | ------------------------------------------------------------------------------------- |
+| name   | String   | 'expand' | true     | Action name                                                                           |
+| cost   | Int      | 1        | true     | Action cost                                                                           |
+| expand | Function |          | false    | Function that takes a state as argument and returns the data for the following states |
 
 Examples
+
 ```js
 const actions = [
   {
     expand: (state) => {
-      return { position: state.position + 1 };
-    }
+      return { position: state.position + 1 }
+    },
   },
   {
     expand: (state) => {
-      return Promise.resolve({ position: state.position - 1});
-    }
+      return Promise.resolve({ position: state.position - 1 })
+    },
   },
   {
     name: 'myFancyAction',
     cost: 80,
     expand: (state) => {
-      if(state.height > 90) {
-        return;
+      if (state.height > 90) {
+        return
       }
-      return { height: state.height + 10 };
-    }
+      return { height: state.height + 10 }
+    },
   },
-];
-
+]
 ```
+
 > **NOTE:** Remember to return `undefined` or simply `return` on forbidden actions to avoid generating infinite states
 
 ### Hash
 
 Used to establish when two newly generated states are essentially the same , for example, in a maze going to the left one cell and the returning to the same represents essentially the same state and we do not want that
 
-| Type   | Defaults | Optional | Description                 |
-|--------|----------|----------|-----------------------------|
-| String\|Function|          | false    | Field or function to determine the equality of two states |
+| Type             | Defaults | Optional | Description                                               |
+| ---------------- | -------- | -------- | --------------------------------------------------------- |
+| String\|Function |          | false    | Field or function to determine the equality of two states |
 
 Examples
 
 ```js
-const hash = 'position';
+const hash = 'position'
 
-const hash = 'height';
+const hash = 'height'
 
-const hash = (state) => `${state.x},${state.y}`;
+const hash = (state) => `${state.x},${state.y}`
 ```
 
 ### Heuristics
@@ -211,24 +217,24 @@ Used to give a state a 'sense of approaching to the goal'.
 It is a function that returns decreasing values as the closer we get to the goal.
 It depends purely on your search state representation and you must ensure to provide logical and decreasing values the closer the solution is
 
-| Type   | Defaults | Optional | Description                 |
-|--------|----------|----------|-----------------------------|
-|Function|          | true     | Function to determine the 'proximity' to a goal |
+| Type     | Defaults | Optional | Description                                     |
+| -------- | -------- | -------- | ----------------------------------------------- |
+| Function |          | true     | Function to determine the 'proximity' to a goal |
 
 Examples
 
 ```js
 const heuristics = ({ x, y }) => {
   // Euclidean distance
-  return Math.sqrt(((x - goal.x) ** 2) + ((y - goal.y) ** 2));
-};
+  return Math.sqrt((x - goal.x) ** 2 + (y - goal.y) ** 2)
+}
 
 const heuristics = ({ x, y }) => {
   // Manhattan distance
-  return Math.abs((x - goal.x) + (y - goal.y));
-};
+  return Math.abs(x - goal.x + (y - goal.y))
+}
 
-const heuristics = state => 90 - state.position;
+const heuristics = (state) => 90 - state.position
 ```
 
 A better documentation its on the way.
@@ -238,20 +244,21 @@ A better documentation its on the way.
 Available engines
 
 ### Uninformed
+
 | Engine        | API      |
-|---------------|----------|
+| ------------- | -------- |
 | Breadth-first | bfs      |
 | Dijkstra      | dijkstra |
 | Random-search | random   |
 | Depth-first   | dfs      |
 
 ### Informed
-| Engine            | API      |
-|-------------------|----------|
-| Best-first search | bestfs   |
-| A*                | astar    |
-| Weighted-A*       | weightedastar    |
 
+| Engine            | API           |
+| ----------------- | ------------- |
+| Best-first search | bestfs        |
+| A\*               | astar         |
+| Weighted-A\*      | weightedastar |
 
 ## Promises
 
