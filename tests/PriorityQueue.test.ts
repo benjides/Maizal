@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { insert, priorityQueue, values } from '../src/PriorityQueue.js'
 
-type Month = {
-  index: number
+type Person = {
+  age: number
   name: string
 }
 
@@ -13,29 +13,29 @@ it('creates empty PriorityQueue', () => {
 })
 
 it('sorts values on creation', () => {
-  const months: Month[] = [
+  const persons: Person[] = [
     {
-      index: 1,
-      name: 'February',
+      age: 34,
+      name: 'John',
     },
     {
-      index: 0,
-      name: 'January',
+      age: 27,
+      name: 'Jane',
     },
   ]
 
   const priorityQueueValues = values(
-    priorityQueue((month: Month) => month.index)(months),
+    priorityQueue((person: Person) => person.age)(persons),
   )
 
-  const expectedPriorityQueueValues: Month[] = [
+  const expectedPriorityQueueValues: Person[] = [
     {
-      index: 0,
-      name: 'January',
+      age: 27,
+      name: 'Jane',
     },
     {
-      index: 1,
-      name: 'February',
+      age: 34,
+      name: 'John',
     },
   ]
   expect(priorityQueueValues).toStrictEqual(expectedPriorityQueueValues)
@@ -43,32 +43,32 @@ it('sorts values on creation', () => {
 
 describe('PriorityQueue insert', () => {
   it('inserts value at last position', () => {
-    const months: Month[] = [
+    const persons: Person[] = [
       {
-        index: 1,
-        name: 'February',
+        age: 27,
+        name: 'Jane',
       },
     ]
 
-    const month: Month = {
-      index: 2,
-      name: 'March',
+    const person: Person = {
+      age: 34,
+      name: 'John',
     }
 
-    const priority = (month: Month) => month.index
+    const priority = (person: Person) => person.age
 
-    const priorityQueueValues = insert(priority)(month)(
-      priorityQueue(priority)(months),
+    const priorityQueueValues = insert(priority)(person)(
+      priorityQueue(priority)(persons),
     )
 
-    const expectedPriorityQueueValues: Month[] = [
+    const expectedPriorityQueueValues: Person[] = [
       {
-        index: 1,
-        name: 'February',
+        age: 27,
+        name: 'Jane',
       },
       {
-        index: 2,
-        name: 'March',
+        age: 34,
+        name: 'John',
       },
     ]
     expect(values(priorityQueueValues)).toStrictEqual(
@@ -77,32 +77,32 @@ describe('PriorityQueue insert', () => {
   })
 
   it('inserts value at first position', () => {
-    const months: Month[] = [
+    const persons: Person[] = [
       {
-        index: 2,
-        name: 'March',
+        age: 34,
+        name: 'John',
       },
     ]
 
-    const month: Month = {
-      index: 1,
-      name: 'February',
+    const person: Person = {
+      age: 27,
+      name: 'Jane',
     }
 
-    const priority = (month: Month) => month.index
+    const priority = (person: Person) => person.age
 
-    const priorityQueueValues = insert(priority)(month)(
-      priorityQueue(priority)(months),
+    const priorityQueueValues = insert(priority)(person)(
+      priorityQueue(priority)(persons),
     )
 
-    const expectedPriorityQueueValues: Month[] = [
+    const expectedPriorityQueueValues: Person[] = [
       {
-        index: 1,
-        name: 'February',
+        age: 27,
+        name: 'Jane',
       },
       {
-        index: 2,
-        name: 'March',
+        age: 34,
+        name: 'John',
       },
     ]
     expect(values(priorityQueueValues)).toStrictEqual(
@@ -111,40 +111,40 @@ describe('PriorityQueue insert', () => {
   })
 
   it('inserts value at the middle position', () => {
-    const months: Month[] = [
+    const persons: Person[] = [
       {
-        index: 0,
-        name: 'January',
+        age: 27,
+        name: 'Jane',
       },
       {
-        index: 2,
-        name: 'March',
+        age: 34,
+        name: 'John',
       },
     ]
 
-    const month: Month = {
-      index: 1,
-      name: 'February',
+    const person: Person = {
+      age: 28,
+      name: 'Sally',
     }
 
-    const priority = (month: Month) => month.index
+    const priority = (person: Person) => person.age
 
-    const priorityQueueValues = insert(priority)(month)(
-      priorityQueue(priority)(months),
+    const priorityQueueValues = insert(priority)(person)(
+      priorityQueue(priority)(persons),
     )
 
-    const expectedPriorityQueueValues: Month[] = [
+    const expectedPriorityQueueValues: Person[] = [
       {
-        index: 0,
-        name: 'January',
+        age: 27,
+        name: 'Jane',
       },
       {
-        index: 1,
-        name: 'February',
+        age: 28,
+        name: 'Sally',
       },
       {
-        index: 2,
-        name: 'March',
+        age: 34,
+        name: 'John',
       },
     ]
     expect(values(priorityQueueValues)).toStrictEqual(
@@ -153,11 +153,6 @@ describe('PriorityQueue insert', () => {
   })
 
   it('inserts after in case of same priority', () => {
-    type Person = {
-      age: number
-      name: string
-    }
-
     const persons: Person[] = [
       {
         age: 20,
