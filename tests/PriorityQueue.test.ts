@@ -152,4 +152,53 @@ describe('PriorityQueue insert', () => {
       expectedPriorityQueueValues,
     )
   })
+
+  it('inserts after in case of same priority', () => {
+
+    type Person = {
+      age: number,
+      name: string,
+    }
+
+    const persons : Person[] = [
+      {
+        age: 20,
+        name: 'John',
+      },
+      {
+        age: 28,
+        name: 'Sally',
+      },
+    ]
+
+    const person = {
+      age: 20,
+      name: 'Jane',
+    }
+
+    const priority = (person: Person) => person.age
+
+    const priorityQueueValues = insert(priority)(person)(
+      priorityQueue(priority)(persons),
+    )
+
+    const expectedPriorityQueueValues: Person[] = [
+      {
+        age: 20,
+        name: 'John',
+      },
+      {
+        age: 20,
+        name: 'Jane',
+      },
+      {
+        age: 28,
+        name: 'Sally',
+      },
+    ]
+    expect(values(priorityQueueValues)).toStrictEqual(
+      expectedPriorityQueueValues,
+    )
+  })
+
 })
