@@ -204,7 +204,7 @@ describe('PriorityQueue insert', () => {
 })
 
 describe('PriorityQueue poll', () => {
-  it('polls top element', () => {
+  it('polls non empty PriorityQueue', () => {
     const persons: Person[] = [
       {
         age: 27,
@@ -216,36 +216,28 @@ describe('PriorityQueue poll', () => {
       },
     ]
 
-    const [person] = poll(personsPriorityQueue(persons))
+    const [person, priorityQueue] = poll(personsPriorityQueue(persons))
 
     const expectedPerson: Person = {
       age: 27,
       name: 'Jane',
     }
-
-    expect(person).toStrictEqual(expectedPerson)
-  })
-
-  it('pops element from the PriorityQueue', () => {
-    const persons: Person[] = [
-      {
-        age: 27,
-        name: 'Jane',
-      },
-      {
-        age: 34,
-        name: 'John',
-      },
-    ]
-
-    const [, priorityQueue] = poll(personsPriorityQueue(persons))
-
     const expectedPriorityQueueValues: Person[] = [
       {
         age: 34,
         name: 'John',
       },
     ]
+    expect(person).toStrictEqual(expectedPerson)
     expect(values(priorityQueue)).toStrictEqual(expectedPriorityQueueValues)
+  })
+
+  it('polls empty PriorityQueue', () => {
+    const persons: Person[] = []
+
+    const [person, priorityQueue] = poll(personsPriorityQueue(persons))
+
+    expect(person).toBeNull()
+    expect(priorityQueue).toStrictEqual([])
   })
 })
