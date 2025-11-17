@@ -5,28 +5,15 @@ export type Node<T> = {
   data: T
 }
 
-export const priorityQueue =
-  <T>(priority: (node: T) => number) =>
-  (data: T[]) =>
-    data
-      .map((node: T) => ({
-        priority: priority(node),
-        data: node,
-      }))
-      .sort((a: Node<T>, b: Node<T>) => a.priority - b.priority)
+export const priorityQueue = <T>(data: Node<T>[]) =>
+  data.sort((a: Node<T>, b: Node<T>) => a.priority - b.priority)
 
 export const values = <T>(priorityQueue: PriorityQueue<T>) =>
   priorityQueue.map((node: Node<T>) => node.data)
 
 export const insert =
-  <T>(priority: (node: T) => number) =>
-  (value: T) =>
+  <T>(nodeToInsert: Node<T>) =>
   (priorityQueue: PriorityQueue<T>) => {
-    const nodeToInsert: Node<T> = {
-      priority: priority(value),
-      data: value,
-    }
-
     const index: number = priorityQueue.findIndex(
       (node: Node<T>) => nodeToInsert.priority < node.priority,
     )
