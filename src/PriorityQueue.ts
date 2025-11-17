@@ -5,6 +5,13 @@ export type Node<T> = {
   data: T
 }
 
+export const node: <T>(f: (e: T) => number) => (e: T) => Node<T> =
+  <T>(f: (e: T) => number) =>
+  (e: T) => ({
+    priority: f(e),
+    data: e,
+  })
+
 export const priorityQueue = <T>(data: Node<T>[]) =>
   data.sort((a: Node<T>, b: Node<T>) => a.priority - b.priority)
 
@@ -18,7 +25,10 @@ export const insert =
       (node: Node<T>) => nodeToInsert.priority < node.priority,
     )
 
-    if (index === -1) return [...priorityQueue, nodeToInsert]
+    if (index === -1) {
+      return [...priorityQueue, nodeToInsert]
+    }
+
     return [
       ...priorityQueue.slice(0, index),
       nodeToInsert,

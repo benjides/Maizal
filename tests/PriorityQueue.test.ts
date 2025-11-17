@@ -1,20 +1,28 @@
 import { describe, expect, it } from 'vitest'
-import { insert, priorityQueue, values } from '../src/PriorityQueue.js'
+import {
+  insert,
+  node,
+  priorityQueue,
+  values,
+  type Node,
+  type PriorityQueue,
+} from '../src/PriorityQueue.js'
 
 type Person = {
   age: number
   name: string
 }
 
-const node = (person: Person) => ({
-  data: person,
-  priority: person.age,
-})
+const priority = (person: Person) => person.age
 
-const priority = (persons: Person[]) => persons.map(node)
+const personNode: (e: Person) => Node<Person> = node(priority)
+
+const personsPriorityQueue: (persons: Person[]) => PriorityQueue<Person> = (
+  persons: Person[],
+) => priorityQueue(persons.map(personNode))
 
 it('creates empty PriorityQueue', () => {
-  const priorityQueueValues = values(priorityQueue([]))
+  const priorityQueueValues = values(personsPriorityQueue([]))
 
   expect(priorityQueueValues).toStrictEqual([])
 })
@@ -31,7 +39,7 @@ it('sorts values on creation', () => {
     },
   ]
 
-  const priorityQueueValues = values(priorityQueue(priority(persons)))
+  const priorityQueueValues = values(personsPriorityQueue(persons))
 
   const expectedPriorityQueueValues: Person[] = [
     {
@@ -60,8 +68,8 @@ describe('PriorityQueue insert', () => {
       name: 'John',
     }
 
-    const priorityQueueValues = insert(node(person))(
-      priorityQueue(priority(persons)),
+    const priorityQueueValues = insert(personNode(person))(
+      personsPriorityQueue(persons),
     )
 
     const expectedPriorityQueueValues: Person[] = [
@@ -92,8 +100,8 @@ describe('PriorityQueue insert', () => {
       name: 'Jane',
     }
 
-    const priorityQueueValues = insert(node(person))(
-      priorityQueue(priority(persons)),
+    const priorityQueueValues = insert(personNode(person))(
+      personsPriorityQueue(persons),
     )
 
     const expectedPriorityQueueValues: Person[] = [
@@ -128,8 +136,8 @@ describe('PriorityQueue insert', () => {
       name: 'Sally',
     }
 
-    const priorityQueueValues = insert(node(person))(
-      priorityQueue(priority(persons)),
+    const priorityQueueValues = insert(personNode(person))(
+      personsPriorityQueue(persons),
     )
 
     const expectedPriorityQueueValues: Person[] = [
@@ -168,8 +176,8 @@ describe('PriorityQueue insert', () => {
       name: 'Jane',
     }
 
-    const priorityQueueValues = insert(node(person))(
-      priorityQueue(priority(persons)),
+    const priorityQueueValues = insert(personNode(person))(
+      personsPriorityQueue(persons),
     )
 
     const expectedPriorityQueueValues: Person[] = [
