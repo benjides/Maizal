@@ -4,7 +4,7 @@
   "description": "Search algorithm framework to find and expand trees.",
   "scripts": {
     "lint": "eslint ./src ./tests",
-    "lint:fix": "eslint ./src ./tests",
+    "lint:fix": "eslint ./src ./tests --fix",
     "format": "prettier  --check .",
     "format:fix": "prettier --write .",
     "test": "vitest --run",
