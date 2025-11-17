@@ -21,37 +21,39 @@ const personsPriorityQueue: (persons: Person[]) => PriorityQueue<Person> = (
   persons: Person[],
 ) => priorityQueue(persons.map(personNode))
 
-it('creates empty PriorityQueue', () => {
-  const priorityQueueValues = values(personsPriorityQueue([]))
+describe('PriorityQueue creation', () => {
+  it('creates empty PriorityQueue', () => {
+    const priorityQueueValues = values(personsPriorityQueue([]))
 
-  expect(priorityQueueValues).toStrictEqual([])
-})
+    expect(priorityQueueValues).toStrictEqual([])
+  })
 
-it('sorts values on creation', () => {
-  const persons: Person[] = [
-    {
-      age: 34,
-      name: 'John',
-    },
-    {
-      age: 27,
-      name: 'Jane',
-    },
-  ]
+  it('sorts values on creation', () => {
+    const persons: Person[] = [
+      {
+        age: 34,
+        name: 'John',
+      },
+      {
+        age: 27,
+        name: 'Jane',
+      },
+    ]
 
-  const priorityQueueValues = values(personsPriorityQueue(persons))
+    const priorityQueueValues = values(personsPriorityQueue(persons))
 
-  const expectedPriorityQueueValues: Person[] = [
-    {
-      age: 27,
-      name: 'Jane',
-    },
-    {
-      age: 34,
-      name: 'John',
-    },
-  ]
-  expect(priorityQueueValues).toStrictEqual(expectedPriorityQueueValues)
+    const expectedPriorityQueueValues: Person[] = [
+      {
+        age: 27,
+        name: 'Jane',
+      },
+      {
+        age: 34,
+        name: 'John',
+      },
+    ]
+    expect(priorityQueueValues).toStrictEqual(expectedPriorityQueueValues)
+  })
 })
 
 describe('PriorityQueue insert', () => {
