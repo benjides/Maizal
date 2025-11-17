@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   insert,
   node,
+  poll,
   priorityQueue,
   values,
   type Node,
@@ -199,5 +200,52 @@ describe('PriorityQueue insert', () => {
     expect(values(priorityQueueValues)).toStrictEqual(
       expectedPriorityQueueValues,
     )
+  })
+})
+
+describe('PriorityQueue poll', () => {
+  it('polls top element', () => {
+    const persons: Person[] = [
+      {
+        age: 27,
+        name: 'Jane',
+      },
+      {
+        age: 34,
+        name: 'John',
+      },
+    ]
+
+    const [person] = poll(personsPriorityQueue(persons))
+
+    const expectedPerson: Person = {
+      age: 27,
+      name: 'Jane',
+    }
+
+    expect(person).toStrictEqual(expectedPerson)
+  })
+
+  it('pops element from the PriorityQueue', () => {
+    const persons: Person[] = [
+      {
+        age: 27,
+        name: 'Jane',
+      },
+      {
+        age: 34,
+        name: 'John',
+      },
+    ]
+
+    const [, priorityQueue] = poll(personsPriorityQueue(persons))
+
+    const expectedPriorityQueueValues: Person[] = [
+      {
+        age: 34,
+        name: 'John',
+      },
+    ]
+    expect(values(priorityQueue)).toStrictEqual(expectedPriorityQueueValues)
   })
 })

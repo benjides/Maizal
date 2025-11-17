@@ -35,3 +35,10 @@ export const insert =
       ...priorityQueue.slice(index),
     ]
   }
+
+export const poll: <T>(
+  priorityQueue: PriorityQueue<T>,
+) => [T, PriorityQueue<T>] = <T>(priorityQueue: PriorityQueue<T>) => [
+  priorityQueue[0]?.data as T,
+  priorityQueue.slice(1),
+]
