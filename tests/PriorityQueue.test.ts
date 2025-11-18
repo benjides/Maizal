@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { assert, describe, it } from 'vitest'
 import {
   insert,
   node,
@@ -27,7 +27,7 @@ describe('PriorityQueue', () => {
     it('creates empty', () => {
       const priorityQueueValues = values(personsPriorityQueue([]))
 
-      expect(priorityQueueValues).toStrictEqual([])
+      assert.deepStrictEqual(priorityQueueValues, [])
     })
 
     it('sorts Nodes on creation', () => {
@@ -54,7 +54,7 @@ describe('PriorityQueue', () => {
           name: 'John',
         },
       ]
-      expect(priorityQueueValues).toStrictEqual(expectedPriorityQueueValues)
+      assert.deepStrictEqual(priorityQueueValues, expectedPriorityQueueValues)
     })
   })
   describe('insert', () => {
@@ -85,7 +85,8 @@ describe('PriorityQueue', () => {
           name: 'John',
         },
       ]
-      expect(values(priorityQueueValues)).toStrictEqual(
+      assert.deepStrictEqual(
+        values(priorityQueueValues),
         expectedPriorityQueueValues,
       )
     })
@@ -117,7 +118,8 @@ describe('PriorityQueue', () => {
           name: 'John',
         },
       ]
-      expect(values(priorityQueueValues)).toStrictEqual(
+      assert.deepStrictEqual(
+        values(priorityQueueValues),
         expectedPriorityQueueValues,
       )
     })
@@ -157,7 +159,8 @@ describe('PriorityQueue', () => {
           name: 'John',
         },
       ]
-      expect(values(priorityQueueValues)).toStrictEqual(
+      assert.deepStrictEqual(
+        values(priorityQueueValues),
         expectedPriorityQueueValues,
       )
     })
@@ -197,7 +200,8 @@ describe('PriorityQueue', () => {
           name: 'Sally',
         },
       ]
-      expect(values(priorityQueueValues)).toStrictEqual(
+      assert.deepStrictEqual(
+        values(priorityQueueValues),
         expectedPriorityQueueValues,
       )
     })
@@ -227,8 +231,8 @@ describe('PriorityQueue', () => {
           name: 'John',
         },
       ]
-      expect(person).toStrictEqual(expectedPerson)
-      expect(values(priorityQueue)).toStrictEqual(expectedPriorityQueueValues)
+      assert.deepStrictEqual(person, expectedPerson)
+      assert.deepStrictEqual(values(priorityQueue), expectedPriorityQueueValues)
     })
 
     it('polls empty PriorityQueue', () => {
@@ -236,8 +240,8 @@ describe('PriorityQueue', () => {
 
       const [person, priorityQueue] = poll(personsPriorityQueue(persons))
 
-      expect(person).toBeNull()
-      expect(priorityQueue).toStrictEqual([])
+      assert.isNull(person)
+      assert.deepStrictEqual(priorityQueue, [])
     })
   })
 })
