@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { assert, describe, it } from 'vitest'
 
 import { empty, has, insert } from '../src/HashSet.js'
 
@@ -9,7 +9,7 @@ type Vector = {
 
 describe('HashSet creation', () => {
   it('creates empty HashSet', () => {
-    expect(empty<Vector>()).toStrictEqual([])
+    assert.deepStrictEqual(empty<Vector>(), [])
   })
 })
 
@@ -28,7 +28,7 @@ describe('HashSet insert', () => {
         y: 8,
       },
     ]
-    expect(hashSet).toStrictEqual(expectedHashSetValues)
+    assert.deepStrictEqual(hashSet, expectedHashSetValues)
   })
 })
 
@@ -42,7 +42,7 @@ describe('PriorityQueue has', () => {
       x: -3,
       y: 8,
     }
-    expect(hasVector(vector)(hashSet)).toBe(false)
+    assert.isFalse(hasVector(vector)(hashSet))
   })
 
   it('has element for an element present in the HashSet', () => {
@@ -55,7 +55,7 @@ describe('PriorityQueue has', () => {
 
     const hasVector = has((a: Vector, b: Vector) => a.x === b.x && b.y === b.y)
 
-    expect(hasVector(vector)(hashSet)).toBe(true)
+    assert.isTrue(hasVector(vector)(hashSet))
   })
 
   it('has element for an element present in the HashSet with swapped properties', () => {
@@ -72,7 +72,7 @@ describe('PriorityQueue has', () => {
       y: 8,
       x: -3,
     }
-    expect(hasVector(swappedPropertiesVector)(hashSet)).toBe(true)
+    assert.isTrue(hasVector(swappedPropertiesVector)(hashSet))
   })
 
   it('not present HashSet', () => {
@@ -85,11 +85,6 @@ describe('PriorityQueue has', () => {
 
     const hasVector = has((a: Vector, b: Vector) => a.x === b.x && b.y === b.y)
 
-    expect(
-      hasVector({
-        x: 1,
-        y: -18,
-      })(hashSet),
-    ).toBe(false)
+    assert.isFalse(hasVector({ x: 1, y: -18 })(hashSet))
   })
 })
