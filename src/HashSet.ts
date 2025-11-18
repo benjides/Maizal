@@ -4,6 +4,13 @@ export type Eq<T> = (x: T, y: T) => boolean
 
 export const empty: <T>() => HashSet<T> = () => []
 
+/**
+ * Inserts an element T for a given HashSet<T>
+ *
+ * @example
+ *
+ * assert.deepStrictEqual(insert(2)(empty<number>()), [2])
+ */
 export const insert: <T>(element: T) => (hashSet: HashSet<T>) => HashSet<T> =
   <T>(element: T) =>
   (hashSet: HashSet<T>) => [...hashSet, element]
