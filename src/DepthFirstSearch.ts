@@ -22,6 +22,17 @@ type State<S> = {
   depth: number
 }
 
+const solution = <S>(state: State<S>) => {
+  let node: State<S> | null = state
+  const sol: S[] = []
+  while (node !== null) {
+    sol.push(node.state)
+    node = node.parent
+  }
+
+  return sol.reverse()
+}
+
 export const depthFirstSearch: Search = <S>(
   initial: S,
   goal: S,
@@ -35,11 +46,7 @@ export const depthFirstSearch: Search = <S>(
     s: State<S>,
   ): Promise<S[]> {
     if (eq(goal, s.state)) {
-      if (s.parent !== null) {
-        return [s.state, s.parent.state].reverse()
-      }
-
-      return [s.state]
+      return solution(s)
     }
 
     const ns: S = await expand(s.state)
@@ -53,7 +60,8 @@ export const depthFirstSearch: Search = <S>(
       priority: s.depth + 1,
       data: data,
     })(open)
-    return expandRecursively(queue, poll(queue)[0] as State<S>)
+    const [next, pq] = poll(queue)
+    return expandRecursively(pq, next as State<S>)
   }
   const initState: State<S> = {
     depth: 0,
