@@ -1,12 +1,16 @@
 import { describe, it, assert } from 'vitest'
 import { depthFirstSearch, type Eq } from '../src/DepthFirstSearch.js'
 
+type Position = {
+  x: number
+  y: number
+}
+
+const eq: Eq<Position> = (a: Position, b: Position) =>
+  a.y === b.y && a.x === b.x
+
 describe('DepthFirstSearch', () => {
   it('solves when initial and goal are equals', async () => {
-    type Position = {
-      x: number
-      y: number
-    }
     const initial: Position = {
       x: 0,
       y: 0,
@@ -15,8 +19,6 @@ describe('DepthFirstSearch', () => {
       x: 0,
       y: 0,
     }
-    const eq: Eq<Position> = (a: Position, b: Position) =>
-      a.y === b.y && a.x === b.x
 
     const actualSolution = await depthFirstSearch(initial, goal, eq, () =>
       Promise.resolve(goal),
@@ -27,10 +29,6 @@ describe('DepthFirstSearch', () => {
   })
 
   it('solves after expanding once', async () => {
-    type Position = {
-      x: number
-      y: number
-    }
     const initial: Position = {
       x: 0,
       y: 0,
@@ -39,8 +37,6 @@ describe('DepthFirstSearch', () => {
       x: 0,
       y: 1,
     }
-    const eq: Eq<Position> = (a: Position, b: Position) =>
-      a.y === b.y && a.x === b.x
 
     const actualSolution = await depthFirstSearch(initial, goal, eq, () =>
       Promise.resolve(goal),
@@ -54,10 +50,6 @@ describe('DepthFirstSearch', () => {
   })
 
   it('solves after expanding twice', async () => {
-    type Position = {
-      x: number
-      y: number
-    }
     const initial: Position = {
       x: 0,
       y: 0,
@@ -66,8 +58,6 @@ describe('DepthFirstSearch', () => {
       x: 0,
       y: 2,
     }
-    const eq: Eq<Position> = (a: Position, b: Position) =>
-      a.y === b.y && a.x === b.x
 
     const actualSolution = await depthFirstSearch(
       initial,
