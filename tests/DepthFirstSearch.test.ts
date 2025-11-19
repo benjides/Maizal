@@ -15,8 +15,10 @@ const eq: Eq<Position> = (a: Position, b: Position) =>
 
 type Movement = (position: Position) => Position | null
 
+const gridSize: number = 2;
+
 const up: Movement = (position: Position) => {
-  if (position.y === 2) {
+  if (position.y === gridSize) {
     return null
   }
   return {
@@ -34,7 +36,7 @@ const down: Movement = (position: Position) => {
   }
 }
 const right: Movement = (position: Position) => {
-  if (position.x === 2) {
+  if (position.x === gridSize) {
     return null
   }
 
