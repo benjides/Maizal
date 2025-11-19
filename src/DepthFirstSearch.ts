@@ -52,9 +52,7 @@ export const depthFirstSearch: Search = <S>(
       return solution(s)
     }
 
-    const ns: S[] = await Promise.all(expand(s.state))
-
-    const newStates = ns
+    const newStates = (await Promise.all(expand(s.state)))
       .filter((s: S) => !has(eq)(s)(closed))
       .map(
         (state: S): State<S> => ({
