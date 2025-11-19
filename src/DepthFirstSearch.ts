@@ -7,7 +7,7 @@ import {
 
 export type Eq<S> = (a: S, b: S) => boolean
 
-export type Expand<S> = (s: S) => Promise<S>
+export type Expand<S> = (s: S) => Promise<S>[]
 
 export type Search = <S>(
   initial: S,
@@ -49,19 +49,25 @@ export const depthFirstSearch: Search = <S>(
       return solution(s)
     }
 
-    const ns: S = await expand(s.state)
+    const ns: S[] = await Promise.all(expand(s.state))
 
-    const data: State<S> = {
-      parent: s,
-      depth: s.depth + 1,
-      state: ns,
+    const newStates = ns.map(
+      (state: S): State<S> => ({
+        parent: s,
+        depth: s.depth + 1,
+        state: state,
+      }),
+    )
+
+    for (const newState of newStates) {
+      open = insertQueue({
+        priority: newState.depth,
+        data: newState,
+      })(open)
     }
-    const queue = insertQueue({
-      priority: s.depth + 1,
-      data: data,
-    })(open)
-    const [next, pq] = poll(queue)
-    return expandRecursively(pq, next as State<S>)
+
+    const [next, nextQueue] = poll(open)
+    return expandRecursively(nextQueue, next as State<S>)
   }
   const initState: State<S> = {
     depth: 0,
