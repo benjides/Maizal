@@ -61,7 +61,7 @@ export const depthFirstSearch: Search = <S>(
 
     for (const newState of newStates) {
       open = insertQueue({
-        priority: newState.depth,
+        priority: -newState.depth,
         data: newState,
       })(open)
     }
