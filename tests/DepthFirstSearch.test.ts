@@ -119,7 +119,7 @@ describe('DepthFirstSearch', () => {
     assert.deepStrictEqual(actualSolution, expectedSolution)
   })
 
-  it('solves after expanding multiple states filtering invalid movements', async () => {
+  it('solves after expanding n times', async () => {
     const initial: Position = {
       x: 0,
       y: 1,
