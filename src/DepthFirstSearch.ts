@@ -4,6 +4,7 @@ import {
   priorityQueue,
   type PriorityQueue,
 } from './PriorityQueue.js'
+import { empty, has, type HashSet, insert } from './HashSet.js'
 
 export type Eq<S> = (a: S, b: S) => boolean
 
@@ -40,9 +41,11 @@ export const depthFirstSearch: Search = <S>(
   expand: Expand<S>,
 ): Promise<S[]> => {
   const open: PriorityQueue<State<S>> = priorityQueue([])
+  const closed: HashSet<S> = empty()
 
   async function expandRecursively(
     open: PriorityQueue<State<S>>,
+    closed: HashSet<S>,
     s: State<S>,
   ): Promise<S[]> {
     if (eq(goal, s.state)) {
@@ -51,13 +54,15 @@ export const depthFirstSearch: Search = <S>(
 
     const ns: S[] = await Promise.all(expand(s.state))
 
-    const newStates = ns.map(
-      (state: S): State<S> => ({
-        parent: s,
-        depth: s.depth + 1,
-        state: state,
-      }),
-    )
+    const newStates = ns
+      .filter((s: S) => !has(eq)(s)(closed))
+      .map(
+        (state: S): State<S> => ({
+          parent: s,
+          depth: s.depth + 1,
+          state: state,
+        }),
+      )
 
     for (const newState of newStates) {
       open = insertQueue({
@@ -67,7 +72,8 @@ export const depthFirstSearch: Search = <S>(
     }
 
     const [next, nextQueue] = poll(open)
-    return expandRecursively(nextQueue, next as State<S>)
+    closed = insert(s.state)(closed)
+    return expandRecursively(nextQueue, closed, next as State<S>)
   }
   const initState: State<S> = {
     depth: 0,
@@ -75,5 +81,5 @@ export const depthFirstSearch: Search = <S>(
     state: initial,
   }
 
-  return expandRecursively(open, initState)
+  return expandRecursively(open, closed, initState)
 }
