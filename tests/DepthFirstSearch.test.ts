@@ -15,7 +15,7 @@ const eq: Eq<Position> = (a: Position, b: Position) =>
 
 type Movement = (position: Position) => Position | null
 
-const gridSize: number = 2;
+const gridSize: number = 2
 
 const up: Movement = (position: Position) => {
   if (position.y === gridSize) {
@@ -45,8 +45,20 @@ const right: Movement = (position: Position) => {
     y: position.y,
   }
 }
+
+const left: Movement = (position: Position) => {
+  if (position.x === 0) {
+    return null
+  }
+
+  return {
+    x: position.x - 1,
+    y: position.y,
+  }
+}
+
 const expand: Expand<Position> = (position: Position) =>
-  [up, down, right]
+  [up, down, right, left]
     .map((movement: Movement) => movement(position))
     .filter((position: Position | null) => position !== null)
     .map((position: Position) => Promise.resolve(position))
