@@ -8,14 +8,8 @@ import {
 } from './Grid.js'
 
 describe('DepthFirstSearch', () => {
-  const grid: Grid = {
-    rows: 2,
-    columns: 2,
-  }
-
-  const expand = expandPosition(grid)
-
   it('solves when initial and goal are equals', async () => {
+    const grid: Grid = { rows: 1, columns: 1 }
     const initial: Position = {
       x: 0,
       y: 0,
@@ -29,7 +23,7 @@ describe('DepthFirstSearch', () => {
       initial,
       goal,
       positionEquality,
-      expand,
+      expandPosition(grid),
     )
 
     const expectedSolution: Position[] = [{ x: 0, y: 0 }]
@@ -37,6 +31,7 @@ describe('DepthFirstSearch', () => {
   })
 
   it('solves after expanding once', async () => {
+    const grid: Grid = { rows: 2, columns: 1 }
     const initial: Position = {
       x: 0,
       y: 0,
@@ -50,7 +45,7 @@ describe('DepthFirstSearch', () => {
       initial,
       goal,
       positionEquality,
-      expand,
+      expandPosition(grid),
     )
 
     const expectedSolution: Position[] = [
@@ -61,6 +56,7 @@ describe('DepthFirstSearch', () => {
   })
 
   it('solves after expanding twice', async () => {
+    const grid: Grid = { rows: 3, columns: 1 }
     const initial: Position = {
       x: 0,
       y: 0,
@@ -74,7 +70,7 @@ describe('DepthFirstSearch', () => {
       initial,
       goal,
       positionEquality,
-      expand,
+      expandPosition(grid),
     )
 
     const expectedSolution: Position[] = [
@@ -86,6 +82,7 @@ describe('DepthFirstSearch', () => {
   })
 
   it('solves after expanding n times', async () => {
+    const grid: Grid = { rows: 3, columns: 2 }
     const initial: Position = {
       x: 0,
       y: 1,
@@ -99,7 +96,7 @@ describe('DepthFirstSearch', () => {
       initial,
       goal,
       positionEquality,
-      expand,
+      expandPosition(grid),
     )
 
     const expectedSolution: Position[] = [
@@ -111,6 +108,7 @@ describe('DepthFirstSearch', () => {
   })
 
   it('return empty array for unsolvable searches', async () => {
+    const grid: Grid = { rows: 2, columns: 2 }
     const initial: Position = {
       x: 0,
       y: 1,
@@ -124,7 +122,7 @@ describe('DepthFirstSearch', () => {
       initial,
       goal,
       positionEquality,
-      expand,
+      expandPosition(grid),
     )
 
     const expectedSolution: Position[] = []

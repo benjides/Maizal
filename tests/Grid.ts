@@ -16,7 +16,7 @@ export const positionEquality: Eq<Position> = (a: Position, b: Position) =>
 type Movement = (position: Position) => Position | null
 
 const up: (grid: Grid) => Movement = (grid: Grid) => (position: Position) => {
-  if (position.y === grid.rows) {
+  if (position.y === grid.rows - 1) {
     return null
   }
   return {
@@ -35,7 +35,7 @@ const down: (grid: Grid) => Movement = () => (position: Position) => {
 }
 const right: (grid: Grid) => Movement =
   (grid: Grid) => (position: Position) => {
-    if (position.x === grid.columns) {
+    if (position.x === grid.columns - 1) {
       return null
     }
 
