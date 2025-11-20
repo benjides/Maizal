@@ -107,6 +107,38 @@ describe('DepthFirstSearch', () => {
     assert.deepStrictEqual(actualSolution, expectedSolution)
   })
 
+  it('solves worst solution', async () => {
+    const grid: Grid = { rows: 3, columns: 3 }
+    const initial: Position = {
+      x: 0,
+      y: 0,
+    }
+    const goal: Position = {
+      x: 2,
+      y: 2,
+    }
+
+    const actualSolution = await depthFirstSearch(
+      initial,
+      goal,
+      positionEquality,
+      expandPosition(grid),
+    )
+
+    const expectedSolution: Position[] = [
+      { x: 0, y: 0 },
+      { x: 0, y: 1 },
+      { x: 0, y: 2 },
+      { x: 1, y: 2 },
+      { x: 1, y: 1 },
+      { x: 1, y: 0 },
+      { x: 2, y: 0 },
+      { x: 2, y: 1 },
+      { x: 2, y: 2 },
+    ]
+    assert.deepStrictEqual(actualSolution, expectedSolution)
+  })
+
   it('return empty array for unsolvable searches', async () => {
     const grid: Grid = { rows: 2, columns: 2 }
     const initial: Position = {
