@@ -1,5 +1,10 @@
 import type { Eq, Expand } from '../src/DepthFirstSearch.js'
 
+export type Grid = {
+  rows: number
+  columns: number
+}
+
 export type Position = {
   x: number
   y: number
@@ -10,10 +15,8 @@ export const positionEquality: Eq<Position> = (a: Position, b: Position) =>
 
 type Movement = (position: Position) => Position | null
 
-const gridSize: number = 2
-
-const up: Movement = (position: Position) => {
-  if (position.y === gridSize) {
+const up: (grid: Grid) => Movement = (grid: Grid) => (position: Position) => {
+  if (position.y === grid.rows) {
     return null
   }
   return {
@@ -21,7 +24,7 @@ const up: Movement = (position: Position) => {
     y: position.y + 1,
   }
 }
-const down: Movement = (position: Position) => {
+const down: (grid: Grid) => Movement = () => (position: Position) => {
   if (position.y === 0) {
     return null
   }
@@ -30,18 +33,19 @@ const down: Movement = (position: Position) => {
     y: position.y - 1,
   }
 }
-const right: Movement = (position: Position) => {
-  if (position.x === gridSize) {
-    return null
+const right: (grid: Grid) => Movement =
+  (grid: Grid) => (position: Position) => {
+    if (position.x === grid.columns) {
+      return null
+    }
+
+    return {
+      x: position.x + 1,
+      y: position.y,
+    }
   }
 
-  return {
-    x: position.x + 1,
-    y: position.y,
-  }
-}
-
-const left: Movement = (position: Position) => {
+const left: (grid: Grid) => Movement = () => (position: Position) => {
   if (position.x === 0) {
     return null
   }
@@ -52,8 +56,10 @@ const left: Movement = (position: Position) => {
   }
 }
 
-export const expandPosition: Expand<Position> = (position: Position) =>
-  [up, down, right, left]
-    .map((movement: Movement) => movement(position))
-    .filter((position: Position | null) => position !== null)
-    .map((position: Position) => Promise.resolve(position))
+export const expandPosition: (grid: Grid) => Expand<Position> =
+  (grid: Grid) => (position: Position) =>
+    [up, down, right, left]
+      .map((m: (grid: Grid) => Movement) => m(grid))
+      .map((movement: Movement) => movement(position))
+      .filter((position: Position | null) => position !== null)
+      .map((position: Position) => Promise.resolve(position))

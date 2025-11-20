@@ -1,8 +1,20 @@
 import { describe, it, assert } from 'vitest'
 import { depthFirstSearch } from '../src/DepthFirstSearch.js'
-import { expandPosition, type Position, positionEquality } from './Grid.js'
+import {
+  expandPosition,
+  type Grid,
+  type Position,
+  positionEquality,
+} from './Grid.js'
 
 describe('DepthFirstSearch', () => {
+  const grid: Grid = {
+    rows: 2,
+    columns: 2,
+  }
+
+  const expand = expandPosition(grid)
+
   it('solves when initial and goal are equals', async () => {
     const initial: Position = {
       x: 0,
@@ -17,7 +29,7 @@ describe('DepthFirstSearch', () => {
       initial,
       goal,
       positionEquality,
-      expandPosition,
+      expand,
     )
 
     const expectedSolution: Position[] = [{ x: 0, y: 0 }]
@@ -38,7 +50,7 @@ describe('DepthFirstSearch', () => {
       initial,
       goal,
       positionEquality,
-      expandPosition,
+      expand,
     )
 
     const expectedSolution: Position[] = [
@@ -62,7 +74,7 @@ describe('DepthFirstSearch', () => {
       initial,
       goal,
       positionEquality,
-      expandPosition,
+      expand,
     )
 
     const expectedSolution: Position[] = [
@@ -87,7 +99,7 @@ describe('DepthFirstSearch', () => {
       initial,
       goal,
       positionEquality,
-      expandPosition,
+      expand,
     )
 
     const expectedSolution: Position[] = [
