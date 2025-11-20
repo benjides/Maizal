@@ -109,4 +109,25 @@ describe('DepthFirstSearch', () => {
     ]
     assert.deepStrictEqual(actualSolution, expectedSolution)
   })
+
+  it('return empty array for unsolvable searches', async () => {
+    const initial: Position = {
+      x: 0,
+      y: 1,
+    }
+    const goal: Position = {
+      x: 100,
+      y: 100,
+    }
+
+    const actualSolution = await depthFirstSearch(
+      initial,
+      goal,
+      positionEquality,
+      expand,
+    )
+
+    const expectedSolution: Position[] = []
+    assert.deepStrictEqual(actualSolution, expectedSolution)
+  })
 })
