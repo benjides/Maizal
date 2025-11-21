@@ -63,7 +63,7 @@ export const depthFirstSearch: Search = <S>(
     return expandRecursively(nextQueue, closed)
   }
 
-  const t: T.Tree<number, S> = T.tree({
+  const t: T.Tree<number, S> = T.fromRoot({
     key: 0,
     value: initial,
   })

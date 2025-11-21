@@ -33,16 +33,16 @@ export type Root<K, V> = Omit<Node<K, V>, 'parent'>
 export type Child<K, V> = Omit<Node<K, V>, 'parent'>
 
 /**
- * Returns a Tree for a given Root
+ * Creates a Tree for a given Root
  *
  * @example
  * ```ts
- * assert.deepStrictEqual(toArray(tree({ key: 1, value: 1 })), [1])
+ * assert.deepStrictEqual(toArray(fromRoot({ key: 1, value: 1 })), [1])
  * ```
  *
  * @see Root
  */
-export const tree: <K, V>(root: Root<K, V>) => Tree<K, V> = <K, V>(
+export const fromRoot: <K, V>(root: Root<K, V>) => Tree<K, V> = <K, V>(
   root: Root<K, V>,
 ): Tree<K, V> => ({
   key: root.key,
@@ -55,7 +55,7 @@ export const tree: <K, V>(root: Root<K, V>) => Tree<K, V> = <K, V>(
  *
  * @example
  * ```ts
- * assert.deepStrictEqual(toArray(insert({ key: 1, value: 1 })(tree({ key: 1, value: 1 }))), [1, 2])
+ * assert.deepStrictEqual(toArray(insert({ key: 1, value: 1 })(fromRoot({ key: 1, value: 1 }))), [1, 2])
  * ```
  *
  * @see Node
@@ -76,7 +76,7 @@ export const insert: <K, V>(
  *
  * @example
  * ```ts
- * assert.deepStrictEqual(toArray(tree({ key: 1, value: 1 })), [1])
+ * assert.deepStrictEqual(toArray(fromRoot({ key: 1, value: 1 })), [1])
  * ```
  */
 export const toArray: <K, V>(node: Node<K, V>) => V[] = <K, V>(

@@ -1,10 +1,10 @@
 import { assert, describe, it } from 'vitest'
-import { insert, toArray, type Tree, tree } from '../src/Tree.js'
+import { insert, toArray, type Tree, fromRoot } from '../src/Tree.js'
 
 describe('Tree', () => {
   describe('constructor', () => {
     it('creates for Tree Root', () => {
-      const t: Tree<number, number> = tree({
+      const t: Tree<number, number> = fromRoot({
         key: 1,
         value: 1,
       })
@@ -21,7 +21,9 @@ describe('Tree', () => {
         value: 2,
       })
 
-      const t: Tree<number, number> = childInsert(tree({ key: 1, value: 1 }))
+      const t: Tree<number, number> = childInsert(
+        fromRoot({ key: 1, value: 1 }),
+      )
 
       const expectedValues = [1, 2]
       assert.deepStrictEqual(toArray(t), expectedValues)
@@ -38,7 +40,7 @@ describe('Tree', () => {
         value: 3,
       })(
         childInsert(
-          tree({
+          fromRoot({
             key: 1,
             value: 1,
           }),
