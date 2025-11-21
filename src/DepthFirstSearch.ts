@@ -2,7 +2,7 @@ import * as PQ from './PriorityQueue.js'
 import * as T from './Tree.js'
 import * as HS from './HashSet.js'
 import type { PriorityQueue } from './PriorityQueue.js'
-import type { Child, Tree } from './Tree.js'
+import type { Child, Tree, Node } from './Tree.js'
 import type { HashSet } from './HashSet.js'
 
 export type Eq<S> = (a: S, b: S) => boolean
@@ -29,6 +29,7 @@ export const depthFirstSearch: Search = <S>(
     open: PriorityQueue<Tree<number, S>>,
     closed: HashSet<S>,
   ): Promise<S[]> {
+    console.log(open)
     const r = PQ.poll(open)
 
     const next = r[0]
@@ -42,7 +43,7 @@ export const depthFirstSearch: Search = <S>(
       return T.toArray(next)
     }
 
-    const newStates = (await Promise.all(expand(next.value)))
+    const newStates: Node<number, S>[] = (await Promise.all(expand(next.value)))
       .filter((state: S) => !HS.has(eq)(state)(closed))
       .map(
         (state: S): Child<number, S> => ({
@@ -50,12 +51,12 @@ export const depthFirstSearch: Search = <S>(
           value: state,
         }),
       )
+      .map((child: Child<number, S>) => T.insert(child)(next))
 
     for (const newState of newStates) {
-      const tree: Tree<number, S> = T.insert(newState)(next)
       nextQueue = PQ.insert({
         priority: -newState.key,
-        data: tree,
+        data: newState,
       })(nextQueue)
     }
 
