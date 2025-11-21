@@ -5,6 +5,13 @@ import {
   type PriorityQueue,
 } from './PriorityQueue.js'
 import { empty, has, type HashSet, insert } from './HashSet.js'
+import {
+  type Child,
+  toArray,
+  type Tree,
+  insert as insertChild,
+  tree,
+} from './Tree.js'
 
 export type Eq<S> = (a: S, b: S) => boolean
 
@@ -17,34 +24,17 @@ export type Search = <S>(
   expand: Expand<S>,
 ) => Promise<S[]>
 
-type State<S> = {
-  parent: State<S> | null
-  state: S
-  depth: number
-}
-
-const solution = <S>(state: State<S>) => {
-  let node: State<S> | null = state
-  const sol: S[] = []
-  while (node !== null) {
-    sol.push(node.state)
-    node = node.parent
-  }
-
-  return sol.reverse()
-}
-
 export const depthFirstSearch: Search = <S>(
   initial: S,
   goal: S,
   eq: Eq<S>,
   expand: Expand<S>,
 ): Promise<S[]> => {
-  const open: PriorityQueue<State<S>> = priorityQueue([])
+  const open: PriorityQueue<Tree<number, S>> = priorityQueue([])
   const closed: HashSet<S> = empty()
 
   async function expandRecursively(
-    open: PriorityQueue<State<S>>,
+    open: PriorityQueue<Tree<number, S>>,
     closed: HashSet<S>,
   ): Promise<S[]> {
     const r = poll(open)
@@ -56,41 +46,40 @@ export const depthFirstSearch: Search = <S>(
       return []
     }
 
-    if (eq(goal, next.state)) {
-      return solution(next)
+    if (eq(goal, next.value)) {
+      return toArray(next)
     }
 
-    const newStates = (await Promise.all(expand(next.state)))
+    const newStates = (await Promise.all(expand(next.value)))
       .filter((state: S) => !has(eq)(state)(closed))
       .map(
-        (state: S): State<S> => ({
-          parent: next,
-          depth: next.depth + 1,
-          state: state,
+        (state: S): Child<number, S> => ({
+          key: next.key + 1,
+          value: state,
         }),
       )
 
     for (const newState of newStates) {
+      const tree: Tree<number, S> = insertChild(newState)(next)
       nextQueue = insertQueue({
-        priority: -newState.depth,
-        data: newState,
+        priority: -newState.key,
+        data: tree,
       })(nextQueue)
     }
 
-    closed = insert(next.state)(closed)
+    closed = insert(next.value)(closed)
     return expandRecursively(nextQueue, closed)
   }
 
-  const initState: State<S> = {
-    depth: 0,
-    parent: null,
-    state: initial,
-  }
+  const t: Tree<number, S> = tree({
+    key: 0,
+    value: initial,
+  })
 
   return expandRecursively(
     insertQueue({
-      data: initState,
-      priority: initState.depth,
+      data: t,
+      priority: 0,
     })(open),
     closed,
   )
