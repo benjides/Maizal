@@ -49,13 +49,13 @@ export const depthFirstSearch: Search = <S>(
       .filter((state: S) => !HS.has(eq)(state)(closed))
       .map(
         (state: S): Child<number, S> => ({
-          key: next.key + 1,
+          key: next.key - 1,
           value: state,
         }),
       )
       .map((child: Child<number, S>) => T.insert(child)(next))
       .map((node: Node<number, S>) =>
-        PQ.node((a: Node<number, S>) => -a.key)(node),
+        PQ.node((a: Node<number, S>) => a.key)(node),
       )
 
     for (const newState of newStates) {
