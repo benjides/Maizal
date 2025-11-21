@@ -43,7 +43,9 @@ export const depthFirstSearch: Search = <S>(
       return T.toArray(next)
     }
 
-    const newStates: Node<number, S>[] = (await Promise.all(expand(next.value)))
+    const newStates: PQ.Node<T.Node<number, S>>[] = (
+      await Promise.all(expand(next.value))
+    )
       .filter((state: S) => !HS.has(eq)(state)(closed))
       .map(
         (state: S): Child<number, S> => ({
@@ -52,12 +54,12 @@ export const depthFirstSearch: Search = <S>(
         }),
       )
       .map((child: Child<number, S>) => T.insert(child)(next))
+      .map((node: Node<number, S>) =>
+        PQ.node((a: Node<number, S>) => -a.key)(node),
+      )
 
     for (const newState of newStates) {
-      nextQueue = PQ.insert({
-        priority: -newState.key,
-        data: newState,
-      })(nextQueue)
+      nextQueue = PQ.insert(newState)(nextQueue)
     }
 
     closed = HS.insert(next.value)(closed)
