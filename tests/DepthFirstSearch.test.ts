@@ -1,13 +1,15 @@
 import { describe, it, assert } from 'vitest'
 import { depthFirstSearch } from '../src/DepthFirstSearch.js'
 import {
+  down,
   expand,
-  expandPosition,
   type Grid,
+  left,
   type Position,
   positionEquality,
   right,
   stall,
+  up,
 } from './Grid.js'
 
 describe('DepthFirstSearch', () => {
@@ -26,7 +28,7 @@ describe('DepthFirstSearch', () => {
       initial,
       goal,
       positionEquality,
-      expandPosition(grid),
+      expand(grid)([]),
     )
 
     const expectedSolution: Position[] = [{ x: 0, y: 0 }]
@@ -34,52 +36,52 @@ describe('DepthFirstSearch', () => {
   })
 
   it('solves after expanding once', async () => {
-    const grid: Grid = { rows: 2, columns: 1 }
+    const corridor: Grid = { rows: 1, columns: 2 }
     const initial: Position = {
       x: 0,
       y: 0,
     }
     const goal: Position = {
-      x: 0,
-      y: 1,
+      x: 1,
+      y: 0,
     }
 
     const actualSolution = await depthFirstSearch(
       initial,
       goal,
       positionEquality,
-      expandPosition(grid),
+      expand(corridor)([right]),
     )
 
     const expectedSolution: Position[] = [
       { x: 0, y: 0 },
-      { x: 0, y: 1 },
+      { x: 1, y: 0 },
     ]
     assert.deepStrictEqual(actualSolution, expectedSolution)
   })
 
   it('solves after expanding twice', async () => {
-    const grid: Grid = { rows: 3, columns: 1 }
+    const corridor: Grid = { rows: 1, columns: 3 }
     const initial: Position = {
       x: 0,
       y: 0,
     }
     const goal: Position = {
-      x: 0,
-      y: 2,
+      x: 2,
+      y: 0,
     }
 
     const actualSolution = await depthFirstSearch(
       initial,
       goal,
       positionEquality,
-      expandPosition(grid),
+      expand(corridor)([right]),
     )
 
     const expectedSolution: Position[] = [
       { x: 0, y: 0 },
-      { x: 0, y: 1 },
-      { x: 0, y: 2 },
+      { x: 1, y: 0 },
+      { x: 2, y: 0 },
     ]
     assert.deepStrictEqual(actualSolution, expectedSolution)
   })
@@ -99,7 +101,7 @@ describe('DepthFirstSearch', () => {
       initial,
       goal,
       positionEquality,
-      expandPosition(grid),
+      expand(grid)([up, down, right, left]),
     )
 
     const expectedSolution: Position[] = [
@@ -125,7 +127,7 @@ describe('DepthFirstSearch', () => {
       initial,
       goal,
       positionEquality,
-      expandPosition(grid),
+      expand(grid)([up, down, right, left]),
     )
 
     const expectedSolution: Position[] = [
@@ -157,7 +159,7 @@ describe('DepthFirstSearch', () => {
       initial,
       goal,
       positionEquality,
-      expandPosition(grid),
+      expand(grid)([up]),
     )
 
     const expectedSolution: Position[] = []
@@ -183,14 +185,8 @@ describe('DepthFirstSearch', () => {
     )
 
     const expectedSolution: Position[] = [
-      {
-        x: 0,
-        y: 0,
-      },
-      {
-        x: 1,
-        y: 0,
-      },
+      { x: 0, y: 0 },
+      { x: 1, y: 0 },
       { x: 2, y: 0 },
     ]
     assert.deepStrictEqual(actualSolution, expectedSolution)

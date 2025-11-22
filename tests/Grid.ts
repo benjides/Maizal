@@ -15,16 +15,17 @@ export const positionEquality: Eq<Position> = (a: Position, b: Position) =>
 
 type Movement = (position: Position) => Position | null
 
-const up: (grid: Grid) => Movement = (grid: Grid) => (position: Position) => {
-  if (position.y === grid.rows - 1) {
-    return null
+export const up: (grid: Grid) => Movement =
+  (grid: Grid) => (position: Position) => {
+    if (position.y === grid.rows - 1) {
+      return null
+    }
+    return {
+      x: position.x,
+      y: position.y + 1,
+    }
   }
-  return {
-    x: position.x,
-    y: position.y + 1,
-  }
-}
-const down: (grid: Grid) => Movement = () => (position: Position) => {
+export const down: (grid: Grid) => Movement = () => (position: Position) => {
   if (position.y === 0) {
     return null
   }
@@ -45,7 +46,7 @@ export const right: (grid: Grid) => Movement =
     }
   }
 
-const left: (grid: Grid) => Movement = () => (position: Position) => {
+export const left: (grid: Grid) => Movement = () => (position: Position) => {
   if (position.x === 0) {
     return null
   }
@@ -72,7 +73,3 @@ export const expand: (
       .map((movement: Movement) => movement(position))
       .filter((position: Position | null) => position !== null)
       .map((position: Position) => Promise.resolve(position))
-
-export const expandPosition: (grid: Grid) => Expand<Position> =
-  (grid: Grid) => (position: Position) =>
-    expand(grid)([up, down, right, left])(position)
