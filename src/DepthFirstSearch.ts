@@ -1,7 +1,7 @@
 import * as PQ from './PriorityQueue.js'
 import * as T from './Tree.js'
 import * as HS from './HashSet.js'
-import type { PriorityQueue } from './PriorityQueue.js'
+import { type PriorityQueue } from './PriorityQueue.js'
 import type { Child, Tree, Node } from './Tree.js'
 import type { HashSet } from './HashSet.js'
 
@@ -29,41 +29,40 @@ export const depthFirstSearch: Search = <S>(
     open: PriorityQueue<Tree<number, S>>,
     closed: HashSet<S>,
   ): Promise<S[]> {
-    console.log(open)
-    const r = PQ.poll(open)
+    const [currentState, priorityQueue] = PQ.poll(open)
 
-    const next = r[0]
-    let nextQueue = r[1]
-
-    if (next === null) {
+    if (currentState === null) {
       return []
     }
 
-    if (eq(goal, next.value)) {
-      return T.toArray(next)
+    if (eq(goal, currentState.value)) {
+      return T.toArray(currentState)
     }
 
-    const newStates: PQ.Node<T.Node<number, S>>[] = (
-      await Promise.all(expand(next.value))
+    const newStates: PriorityQueue<Tree<number, S>> = (
+      await Promise.all(expand(currentState.value))
     )
       .filter((state: S) => !HS.has(eq)(state)(closed))
       .map(
         (state: S): Child<number, S> => ({
-          key: next.key - 1,
+          key: currentState.key - 1,
           value: state,
         }),
       )
-      .map((child: Child<number, S>) => T.insert(child)(next))
+      .map((child: Child<number, S>) => T.insert(child)(currentState))
       .map((node: Node<number, S>) =>
-        PQ.node((a: Node<number, S>) => a.key)(node),
+        PQ.node((treeNode: Node<number, S>) => treeNode.key)(node),
+      )
+      .reduce(
+        (
+          priorityQueue: PriorityQueue<Tree<number, S>>,
+          priorityNode: PQ.Node<T.Node<number, S>>,
+        ) => PQ.insert(priorityNode)(priorityQueue),
+        priorityQueue,
       )
 
-    for (const newState of newStates) {
-      nextQueue = PQ.insert(newState)(nextQueue)
-    }
-
-    closed = HS.insert(next.value)(closed)
-    return expandRecursively(nextQueue, closed)
+    closed = HS.insert(currentState.value)(closed)
+    return expandRecursively(newStates, closed)
   }
 
   const t: T.Tree<number, S> = T.fromRoot({
