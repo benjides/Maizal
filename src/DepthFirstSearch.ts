@@ -1,9 +1,6 @@
 import * as PQ from './PriorityQueue.js'
 import * as T from './Tree.js'
 import * as HS from './HashSet.js'
-import { type PriorityQueue } from './PriorityQueue.js'
-import type { Child, Tree, Node } from './Tree.js'
-import type { HashSet } from './HashSet.js'
 
 export type Eq<S> = (a: S, b: S) => boolean
 
@@ -22,12 +19,12 @@ export const depthFirstSearch: Search = <S>(
   eq: Eq<S>,
   expand: Expand<S>,
 ): Promise<S[]> => {
-  const open: PriorityQueue<Tree<number, S>> = PQ.priorityQueue([])
-  const closed: HashSet<S> = HS.empty()
+  const open: PQ.PriorityQueue<T.Tree<number, S>> = PQ.priorityQueue([])
+  const closed: HS.HashSet<S> = HS.empty()
 
   async function expandRecursively(
-    open: PriorityQueue<Tree<number, S>>,
-    closed: HashSet<S>,
+    open: PQ.PriorityQueue<T.Tree<number, S>>,
+    closed: HS.HashSet<S>,
   ): Promise<S[]> {
     const [currentState, priorityQueue] = PQ.poll(open)
 
@@ -39,23 +36,23 @@ export const depthFirstSearch: Search = <S>(
       return T.toArray(currentState)
     }
 
-    const newStates: PriorityQueue<Tree<number, S>> = (
+    const newStates: PQ.PriorityQueue<T.Tree<number, S>> = (
       await Promise.all(expand(currentState.value))
     )
       .filter((state: S) => !HS.has(eq)(state)(closed))
       .map(
-        (state: S): Child<number, S> => ({
+        (state: S): T.Child<number, S> => ({
           key: currentState.key - 1,
           value: state,
         }),
       )
-      .map((child: Child<number, S>) => T.insert(child)(currentState))
-      .map((node: Node<number, S>) =>
-        PQ.node((treeNode: Node<number, S>) => treeNode.key)(node),
+      .map((child: T.Child<number, S>) => T.insert(child)(currentState))
+      .map((node: T.Node<number, S>) =>
+        PQ.node((treeNode: T.Node<number, S>) => treeNode.key)(node),
       )
       .reduce(
         (
-          priorityQueue: PriorityQueue<Tree<number, S>>,
+          priorityQueue: PQ.PriorityQueue<T.Tree<number, S>>,
           priorityNode: PQ.Node<T.Node<number, S>>,
         ) => PQ.insert(priorityNode)(priorityQueue),
         priorityQueue,
