@@ -56,10 +56,18 @@ const left: (grid: Grid) => Movement = () => (position: Position) => {
   }
 }
 
-export const expandPosition: (grid: Grid) => Expand<Position> =
-  (grid: Grid) => (position: Position) =>
-    [up, down, right, left]
-      .map((m: (grid: Grid) => Movement) => m(grid))
+export const expand: (
+  grid: Grid,
+) => (allowedMoves: ((grid: Grid) => Movement)[]) => Expand<Position> =
+  (grid: Grid) =>
+  (allowedMoves: ((grid: Grid) => Movement)[]) =>
+  (position: Position) =>
+    allowedMoves
+      .map((gridMovement: (grid: Grid) => Movement) => gridMovement(grid))
       .map((movement: Movement) => movement(position))
       .filter((position: Position | null) => position !== null)
       .map((position: Position) => Promise.resolve(position))
+
+export const expandPosition: (grid: Grid) => Expand<Position> =
+  (grid: Grid) => (position: Position) =>
+    expand(grid)([up, down, right, left])(position)
