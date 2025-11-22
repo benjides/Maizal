@@ -31,6 +31,7 @@ export const depthFirstSearch: Search = <S>(
     if (currentState === null) {
       return []
     }
+    closed = HS.insert(currentState.value)(closed)
 
     if (eq(goal, currentState.value)) {
       return T.toArray(currentState)
@@ -58,7 +59,6 @@ export const depthFirstSearch: Search = <S>(
         priorityQueue,
       )
 
-    closed = HS.insert(currentState.value)(closed)
     return expandRecursively(newStates, closed)
   }
 

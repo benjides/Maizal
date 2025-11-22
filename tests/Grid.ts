@@ -33,7 +33,7 @@ const down: (grid: Grid) => Movement = () => (position: Position) => {
     y: position.y - 1,
   }
 }
-const right: (grid: Grid) => Movement =
+export const right: (grid: Grid) => Movement =
   (grid: Grid) => (position: Position) => {
     if (position.x === grid.columns - 1) {
       return null
@@ -55,6 +55,11 @@ const left: (grid: Grid) => Movement = () => (position: Position) => {
     y: position.y,
   }
 }
+
+export const stall: () => Movement = () => (position: Position) => ({
+  x: position.x,
+  y: position.y,
+})
 
 export const expand: (
   grid: Grid,

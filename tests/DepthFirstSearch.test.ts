@@ -1,10 +1,13 @@
 import { describe, it, assert } from 'vitest'
 import { depthFirstSearch } from '../src/DepthFirstSearch.js'
 import {
+  expand,
   expandPosition,
   type Grid,
   type Position,
   positionEquality,
+  right,
+  stall,
 } from './Grid.js'
 
 describe('DepthFirstSearch', () => {
@@ -158,6 +161,38 @@ describe('DepthFirstSearch', () => {
     )
 
     const expectedSolution: Position[] = []
+    assert.deepStrictEqual(actualSolution, expectedSolution)
+  })
+
+  it('filters already visited states on expanding', async () => {
+    const corridor: Grid = { rows: 1, columns: 3 }
+    const initial: Position = {
+      x: 0,
+      y: 0,
+    }
+    const goal: Position = {
+      x: 2,
+      y: 0,
+    }
+
+    const actualSolution = await depthFirstSearch(
+      initial,
+      goal,
+      positionEquality,
+      expand(corridor)([stall, right]),
+    )
+
+    const expectedSolution: Position[] = [
+      {
+        x: 0,
+        y: 0,
+      },
+      {
+        x: 1,
+        y: 0,
+      },
+      { x: 2, y: 0 },
+    ]
     assert.deepStrictEqual(actualSolution, expectedSolution)
   })
 })
