@@ -63,12 +63,12 @@ export const fromRoot: <K, V>(root: Root<K, V>) => Tree<K, V> = <K, V>(
  */
 export const insert: <K, V>(
   child: Child<K, V>,
-) => (node: Node<K, V>) => Node<K, V> =
+) => (tree: Tree<K, V>) => Tree<K, V> =
   <K, V>(child: Child<K, V>) =>
-  (node: Node<K, V>) => ({
+  (tree: Tree<K, V>) => ({
     key: child.key,
     value: child.value,
-    parent: node,
+    parent: tree,
   })
 
 /**
@@ -79,7 +79,7 @@ export const insert: <K, V>(
  * assert.deepStrictEqual(toArray(fromRoot({ key: 1, value: 1 })), [1])
  * ```
  */
-export const toArray: <K, V>(node: Node<K, V>) => V[] = <K, V>(
-  node: Node<K, V>,
+export const toArray: <K, V>(tree: Tree<K, V>) => V[] = <K, V>(
+  tree: Tree<K, V>,
 ) =>
-  node.parent === null ? [node.value] : [...toArray(node.parent), node.value]
+  tree.parent === null ? [tree.value] : [...toArray(tree.parent), tree.value]
