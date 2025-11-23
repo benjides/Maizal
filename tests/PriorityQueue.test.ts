@@ -1,5 +1,12 @@
 import { assert, describe, it } from 'vitest'
-import { empty, insert, poll, values } from '../src/PriorityQueue.js'
+import {
+  empty,
+  insert,
+  of,
+  poll,
+  type PriorityQueue,
+  values,
+} from '../src/PriorityQueue.js'
 
 type Person = {
   age: number
@@ -12,6 +19,23 @@ describe('PriorityQueue', () => {
       const priorityQueueValues = values(empty<Person>())
 
       assert.deepStrictEqual(priorityQueueValues, [])
+    })
+
+    it('creates for element', () => {
+      const jane: Person = {
+        age: 27,
+        name: 'Jane',
+      }
+
+      const priorityQueue: PriorityQueue<Person> = of(jane.age, jane)
+
+      const expectedPriorityQueueValues: Person[] = [
+        {
+          age: 27,
+          name: 'Jane',
+        },
+      ]
+      assert.deepStrictEqual(values(priorityQueue), expectedPriorityQueueValues)
     })
   })
   describe('insert', () => {

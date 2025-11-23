@@ -7,6 +7,11 @@ export type Node<T> = {
 
 export const empty: <T>() => PriorityQueue<T> = () => []
 
+export const of: <T>(priority: number, data: T) => PriorityQueue<T> = <T>(
+  priority: number,
+  data: T,
+) => insert(priority, data)(empty())
+
 export const values = <T>(priorityQueue: PriorityQueue<T>) =>
   priorityQueue.map((node: Node<T>) => node.data)
 
