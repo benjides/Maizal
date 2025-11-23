@@ -44,9 +44,10 @@ describe('PriorityQueue', () => {
         name: 'John',
       }
 
-      const priorityQueueValues = insert(personNode(person))(
-        personsPriorityQueue(persons),
-      )
+      const priorityQueueValues = insert(
+        person.age,
+        person,
+      )(personsPriorityQueue(persons))
 
       const expectedPriorityQueueValues: Person[] = [
         {
@@ -77,9 +78,10 @@ describe('PriorityQueue', () => {
         name: 'Jane',
       }
 
-      const priorityQueueValues = insert(personNode(person))(
-        personsPriorityQueue(persons),
-      )
+      const priorityQueueValues = insert(
+        person.age,
+        person,
+      )(personsPriorityQueue(persons))
 
       const expectedPriorityQueueValues: Person[] = [
         {
@@ -114,9 +116,10 @@ describe('PriorityQueue', () => {
         name: 'Sally',
       }
 
-      const priorityQueueValues = insert(personNode(person))(
-        personsPriorityQueue(persons),
-      )
+      const priorityQueueValues = insert(
+        person.age,
+        person,
+      )(personsPriorityQueue(persons))
 
       const expectedPriorityQueueValues: Person[] = [
         {
@@ -155,9 +158,10 @@ describe('PriorityQueue', () => {
         name: 'Jane',
       }
 
-      const priorityQueueValues = insert(personNode(person))(
-        personsPriorityQueue(persons),
-      )
+      const priorityQueueValues = insert(
+        person.age,
+        person,
+      )(personsPriorityQueue(persons))
 
       const expectedPriorityQueueValues: Person[] = [
         {

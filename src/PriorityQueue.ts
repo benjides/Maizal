@@ -18,8 +18,13 @@ export const values = <T>(priorityQueue: PriorityQueue<T>) =>
   priorityQueue.map((node: Node<T>) => node.data)
 
 export const insert =
-  <T>(nodeToInsert: Node<T>) =>
+  <T>(priority: number, data: T) =>
   (priorityQueue: PriorityQueue<T>) => {
+    const nodeToInsert: Node<T> = {
+      priority: priority,
+      data: data,
+    }
+
     const index: number = priorityQueue.findIndex(
       (node: Node<T>) => nodeToInsert.priority < node.priority,
     )

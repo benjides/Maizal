@@ -48,14 +48,11 @@ export const depthFirstSearch: Search = <S>(
         }),
       )
       .map((child: T.Child<number, S>) => T.insert(child)(currentState))
-      .map((node: T.Node<number, S>) =>
-        PQ.node((treeNode: T.Node<number, S>) => treeNode.key)(node),
-      )
       .reduce(
         (
           priorityQueue: PQ.PriorityQueue<T.Tree<number, S>>,
-          priorityNode: PQ.Node<T.Node<number, S>>,
-        ) => PQ.insert(priorityNode)(priorityQueue),
+          treeBranch: T.Tree<number, S>,
+        ) => PQ.insert(treeBranch.key, treeBranch)(priorityQueue),
         priorityQueue,
       )
 
@@ -67,11 +64,5 @@ export const depthFirstSearch: Search = <S>(
     value: initial,
   })
 
-  return expandRecursively(
-    PQ.insert({
-      data: t,
-      priority: 0,
-    })(open),
-    closed,
-  )
+  return expandRecursively(PQ.insert(0, t)(open), closed)
 }
