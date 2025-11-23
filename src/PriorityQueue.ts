@@ -5,10 +5,6 @@ export type Node<T> = {
   data: T
 }
 
-export const priorityQueue: <T>(data: Node<T>[]) => PriorityQueue<T> = <T>(
-  data: Node<T>[],
-) => data
-
 export const empty: <T>() => PriorityQueue<T> = () => []
 
 export const values = <T>(priorityQueue: PriorityQueue<T>) =>
