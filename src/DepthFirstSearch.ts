@@ -18,13 +18,14 @@ export const depthFirstSearch: Search = async <S>(
   goal: S,
   eq: Eq<S>,
   expand: Expand<S>,
-): Promise<S[]> => {
-  const closed: HS.HashSet<S> = HS.empty()
-
-  const t: T.Tree<number, S> = T.fromRoot(0, initial)
-
-  return expandRecursively(goal, PQ.of(0, t), closed, eq, expand)
-}
+): Promise<S[]> =>
+  expandRecursively(
+    goal,
+    PQ.of(0, T.fromRoot(0, initial)),
+    HS.empty(),
+    eq,
+    expand,
+  )
 
 const expandRecursively = async <S>(
   goal: S,
