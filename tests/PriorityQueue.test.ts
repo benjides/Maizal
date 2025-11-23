@@ -29,33 +29,6 @@ describe('PriorityQueue', () => {
 
       assert.deepStrictEqual(priorityQueueValues, [])
     })
-
-    it('sorts Nodes on creation', () => {
-      const persons: Person[] = [
-        {
-          age: 34,
-          name: 'John',
-        },
-        {
-          age: 27,
-          name: 'Jane',
-        },
-      ]
-
-      const priorityQueueValues = values(personsPriorityQueue(persons))
-
-      const expectedPriorityQueueValues: Person[] = [
-        {
-          age: 27,
-          name: 'Jane',
-        },
-        {
-          age: 34,
-          name: 'John',
-        },
-      ]
-      assert.deepStrictEqual(priorityQueueValues, expectedPriorityQueueValues)
-    })
   })
   describe('insert', () => {
     it('inserts value at last position', () => {

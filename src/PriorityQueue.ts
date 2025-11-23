@@ -12,8 +12,7 @@ export const node: <T>(f: (e: T) => number) => (e: T) => Node<T> =
     data: e,
   })
 
-export const priorityQueue = <T>(data: Node<T>[]) =>
-  data.sort((a: Node<T>, b: Node<T>) => a.priority - b.priority)
+export const priorityQueue = <T>(data: Node<T>[]) => data
 
 export const values = <T>(priorityQueue: PriorityQueue<T>) =>
   priorityQueue.map((node: Node<T>) => node.data)
