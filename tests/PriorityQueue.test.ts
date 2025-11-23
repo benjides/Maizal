@@ -1,53 +1,32 @@
 import { assert, describe, it } from 'vitest'
-import {
-  insert,
-  node,
-  poll,
-  priorityQueue,
-  values,
-  type Node,
-  type PriorityQueue,
-} from '../src/PriorityQueue.js'
+import { insert, poll, priorityQueue, values } from '../src/PriorityQueue.js'
 
 type Person = {
   age: number
   name: string
 }
 
-const priority = (person: Person) => person.age
-
-const personNode: (e: Person) => Node<Person> = node(priority)
-
-const personsPriorityQueue: (persons: Person[]) => PriorityQueue<Person> = (
-  persons: Person[],
-) => priorityQueue(persons.map(personNode))
-
 describe('PriorityQueue', () => {
   describe('constructor', () => {
     it('creates empty', () => {
-      const priorityQueueValues = values(personsPriorityQueue([]))
+      const priorityQueueValues = values(priorityQueue<Person>([]))
 
       assert.deepStrictEqual(priorityQueueValues, [])
     })
   })
   describe('insert', () => {
     it('inserts value at last position', () => {
-      const persons: Person[] = [
-        {
-          age: 27,
-          name: 'Jane',
-        },
-      ]
+      const jane: Person = {
+        age: 27,
+        name: 'Jane',
+      }
+      const personsPriorityQueue = insert(jane.age, jane)(priorityQueue([]))
 
-      const person: Person = {
+      const john: Person = {
         age: 34,
         name: 'John',
       }
-
-      const priorityQueueValues = insert(
-        person.age,
-        person,
-      )(personsPriorityQueue(persons))
+      const priorityQueueValues = insert(john.age, john)(personsPriorityQueue)
 
       const expectedPriorityQueueValues: Person[] = [
         {
@@ -66,22 +45,17 @@ describe('PriorityQueue', () => {
     })
 
     it('inserts value at first position', () => {
-      const persons: Person[] = [
-        {
-          age: 34,
-          name: 'John',
-        },
-      ]
+      const john: Person = {
+        age: 34,
+        name: 'John',
+      }
+      const personsPriorityQueue = insert(john.age, john)(priorityQueue([]))
 
-      const person: Person = {
+      const jane: Person = {
         age: 27,
         name: 'Jane',
       }
-
-      const priorityQueueValues = insert(
-        person.age,
-        person,
-      )(personsPriorityQueue(persons))
+      const priorityQueueValues = insert(jane.age, jane)(personsPriorityQueue)
 
       const expectedPriorityQueueValues: Person[] = [
         {
@@ -100,26 +74,24 @@ describe('PriorityQueue', () => {
     })
 
     it('inserts value at the middle position', () => {
-      const persons: Person[] = [
-        {
-          age: 27,
-          name: 'Jane',
-        },
-        {
-          age: 34,
-          name: 'John',
-        },
-      ]
+      const jane: Person = {
+        age: 27,
+        name: 'Jane',
+      }
+      const john: Person = {
+        age: 34,
+        name: 'John',
+      }
+      const personsPriorityQueue = insert(
+        jane.age,
+        jane,
+      )(insert(john.age, john)(priorityQueue([])))
 
-      const person: Person = {
+      const sally: Person = {
         age: 28,
         name: 'Sally',
       }
-
-      const priorityQueueValues = insert(
-        person.age,
-        person,
-      )(personsPriorityQueue(persons))
+      const priorityQueueValues = insert(sally.age, sally)(personsPriorityQueue)
 
       const expectedPriorityQueueValues: Person[] = [
         {
@@ -142,38 +114,25 @@ describe('PriorityQueue', () => {
     })
 
     it('inserts after in case of same priority', () => {
-      const persons: Person[] = [
-        {
-          age: 20,
-          name: 'John',
-        },
-        {
-          age: 28,
-          name: 'Sally',
-        },
-      ]
-
-      const person = {
-        age: 20,
+      const jane: Person = {
+        age: 27,
         name: 'Jane',
       }
+      const personsPriorityQueue = insert(jane.age, jane)(priorityQueue([]))
 
-      const priorityQueueValues = insert(
-        person.age,
-        person,
-      )(personsPriorityQueue(persons))
+      const sally = {
+        age: 27,
+        name: 'Sally',
+      }
+      const priorityQueueValues = insert(sally.age, sally)(personsPriorityQueue)
 
       const expectedPriorityQueueValues: Person[] = [
         {
-          age: 20,
-          name: 'John',
-        },
-        {
-          age: 20,
+          age: 27,
           name: 'Jane',
         },
         {
-          age: 28,
+          age: 27,
           name: 'Sally',
         },
       ]
@@ -185,18 +144,20 @@ describe('PriorityQueue', () => {
   })
   describe('poll', () => {
     it('polls non empty PriorityQueue', () => {
-      const persons: Person[] = [
-        {
-          age: 27,
-          name: 'Jane',
-        },
-        {
-          age: 34,
-          name: 'John',
-        },
-      ]
+      const jane: Person = {
+        age: 27,
+        name: 'Jane',
+      }
+      const john: Person = {
+        age: 34,
+        name: 'John',
+      }
+      const personsPriorityQueue = insert(
+        jane.age,
+        jane,
+      )(insert(john.age, john)(priorityQueue([])))
 
-      const [person, priorityQueue] = poll(personsPriorityQueue(persons))
+      const [person, modifiedQueue] = poll(personsPriorityQueue)
 
       const expectedPerson: Person = {
         age: 27,
@@ -209,16 +170,14 @@ describe('PriorityQueue', () => {
         },
       ]
       assert.deepStrictEqual(person, expectedPerson)
-      assert.deepStrictEqual(values(priorityQueue), expectedPriorityQueueValues)
+      assert.deepStrictEqual(values(modifiedQueue), expectedPriorityQueueValues)
     })
 
     it('polls empty PriorityQueue', () => {
-      const persons: Person[] = []
-
-      const [person, priorityQueue] = poll(personsPriorityQueue(persons))
+      const [person, modifiedQueue] = poll(priorityQueue<Person>([]))
 
       assert.isNull(person)
-      assert.deepStrictEqual(priorityQueue, [])
+      assert.deepStrictEqual(modifiedQueue, [])
     })
   })
 })
