@@ -19,7 +19,7 @@ export const depthFirstSearch: Search = <S>(
   eq: Eq<S>,
   expand: Expand<S>,
 ): Promise<S[]> => {
-  const open: PQ.PriorityQueue<T.Tree<number, S>> = PQ.priorityQueue([])
+  const open: PQ.PriorityQueue<T.Tree<number, S>> = PQ.empty()
   const closed: HS.HashSet<S> = HS.empty()
 
   async function expandRecursively(

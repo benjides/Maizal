@@ -1,5 +1,5 @@
 import { assert, describe, it } from 'vitest'
-import { insert, poll, priorityQueue, values } from '../src/PriorityQueue.js'
+import { empty, insert, poll, values } from '../src/PriorityQueue.js'
 
 type Person = {
   age: number
@@ -9,7 +9,7 @@ type Person = {
 describe('PriorityQueue', () => {
   describe('constructor', () => {
     it('creates empty', () => {
-      const priorityQueueValues = values(priorityQueue<Person>([]))
+      const priorityQueueValues = values(empty<Person>())
 
       assert.deepStrictEqual(priorityQueueValues, [])
     })
@@ -20,7 +20,7 @@ describe('PriorityQueue', () => {
         age: 27,
         name: 'Jane',
       }
-      const personsPriorityQueue = insert(jane.age, jane)(priorityQueue([]))
+      const personsPriorityQueue = insert(jane.age, jane)(empty())
 
       const john: Person = {
         age: 34,
@@ -49,7 +49,7 @@ describe('PriorityQueue', () => {
         age: 34,
         name: 'John',
       }
-      const personsPriorityQueue = insert(john.age, john)(priorityQueue([]))
+      const personsPriorityQueue = insert(john.age, john)(empty())
 
       const jane: Person = {
         age: 27,
@@ -85,7 +85,7 @@ describe('PriorityQueue', () => {
       const personsPriorityQueue = insert(
         jane.age,
         jane,
-      )(insert(john.age, john)(priorityQueue([])))
+      )(insert(john.age, john)(empty()))
 
       const sally: Person = {
         age: 28,
@@ -118,7 +118,7 @@ describe('PriorityQueue', () => {
         age: 27,
         name: 'Jane',
       }
-      const personsPriorityQueue = insert(jane.age, jane)(priorityQueue([]))
+      const personsPriorityQueue = insert(jane.age, jane)(empty())
 
       const sally = {
         age: 27,
@@ -155,7 +155,7 @@ describe('PriorityQueue', () => {
       const personsPriorityQueue = insert(
         jane.age,
         jane,
-      )(insert(john.age, john)(priorityQueue([])))
+      )(insert(john.age, john)(empty()))
 
       const [person, modifiedQueue] = poll(personsPriorityQueue)
 
@@ -174,7 +174,7 @@ describe('PriorityQueue', () => {
     })
 
     it('polls empty PriorityQueue', () => {
-      const [person, modifiedQueue] = poll(priorityQueue<Person>([]))
+      const [person, modifiedQueue] = poll(empty())
 
       assert.isNull(person)
       assert.deepStrictEqual(modifiedQueue, [])
