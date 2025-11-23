@@ -41,12 +41,9 @@ export const depthFirstSearch: Search = <S>(
     )
       .filter((state: S) => !HS.has(eq)(state)(closed))
       .map(
-        (state: S): T.Child<number, S> => ({
-          key: currentState.key - 1,
-          value: state,
-        }),
+        (state: S): T.Tree<number, S> =>
+          T.insert(currentState.key - 1, state)(currentState),
       )
-      .map((child: T.Child<number, S>) => T.insert(child)(currentState))
       .reduce(
         (
           priorityQueue: PQ.PriorityQueue<T.Tree<number, S>>,
@@ -58,10 +55,7 @@ export const depthFirstSearch: Search = <S>(
     return expandRecursively(newStates, closed)
   }
 
-  const t: T.Tree<number, S> = T.fromRoot({
-    key: 0,
-    value: initial,
-  })
+  const t: T.Tree<number, S> = T.fromRoot(0, initial)
 
   return expandRecursively(PQ.of(0, t), closed)
 }
