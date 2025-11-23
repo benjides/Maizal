@@ -5,19 +5,12 @@ export type Node<T> = {
   data: T
 }
 
-export const node: <T>(f: (e: T) => number) => (e: T) => Node<T> =
-  <T>(f: (e: T) => number) =>
-  (e: T) => ({
-    priority: f(e),
-    data: e,
-  })
-
-export const priorityQueue = <T>(data: Node<T>[]) => data
+export const priorityQueue: <T>(data: Node<T>[]) => PriorityQueue<T> = <T>(data: Node<T>[]) => data
 
 export const values = <T>(priorityQueue: PriorityQueue<T>) =>
   priorityQueue.map((node: Node<T>) => node.data)
 
-export const insert =
+export const insert: <T>(priority: number, data: T) => (priorityQueue: PriorityQueue<T>) => PriorityQueue<T> =
   <T>(priority: number, data: T) =>
   (priorityQueue: PriorityQueue<T>) => {
     const nodeToInsert: Node<T> = {
