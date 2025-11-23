@@ -1,6 +1,6 @@
 export type PriorityQueue<T> = Node<T>[]
 
-export type Node<T> = {
+type Node<T> = {
   priority: number
   data: T
 }
