@@ -1,6 +1,6 @@
-import * as PQ from './PriorityQueue.js'
-import * as T from './Tree.js'
-import * as HS from './HashSet.js'
+import * as PQ from './PriorityQueue'
+import * as T from './Tree'
+import * as HS from './HashSet'
 
 export type Eq<S> = (a: S, b: S) => boolean
 

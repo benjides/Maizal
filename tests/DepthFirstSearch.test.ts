@@ -1,5 +1,5 @@
 import { describe, it, assert } from 'vitest'
-import { depthFirstSearch } from '../src/DepthFirstSearch.js'
+import { depthFirstSearch } from '../src/DepthFirstSearch'
 import {
   down,
   expand,
@@ -10,7 +10,7 @@ import {
   right,
   stall,
   up,
-} from './Grid.js'
+} from './Grid'
 
 describe('DepthFirstSearch', () => {
   it('solves when initial and goal are equals', async () => {

@@ -6,7 +6,7 @@ import {
   poll,
   type PriorityQueue,
   values,
-} from '../src/PriorityQueue.js'
+} from '../src/PriorityQueue'
 
 type Person = {
   age: number

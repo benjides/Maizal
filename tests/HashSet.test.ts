@@ -1,6 +1,6 @@
 import { assert, describe, it } from 'vitest'
 
-import { empty, has, insert } from '../src/HashSet.js'
+import { empty, has, insert } from '../src/HashSet'
 
 type Vector = {
   x: number

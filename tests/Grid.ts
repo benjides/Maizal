@@ -1,4 +1,4 @@
-import type { Eq, Expand } from '../src/DepthFirstSearch.js'
+import type { Eq, Expand } from '../src/DepthFirstSearch'
 
 export type Grid = {
   rows: number
