@@ -21,10 +21,10 @@ export const depthFirstSearch: Search = <S>(
 ): Promise<S[]> => {
   const closed: HS.HashSet<S> = HS.empty()
 
-  async function expandRecursively(
+  const expandRecursively = async (
     open: PQ.PriorityQueue<T.Tree<number, S>>,
     closed: HS.HashSet<S>,
-  ): Promise<S[]> {
+  ): Promise<S[]> => {
     const [currentState, priorityQueue] = PQ.poll(open)
 
     if (currentState === null) {
@@ -53,7 +53,7 @@ export const depthFirstSearch: Search = <S>(
       )
 
     return expandRecursively(newStates, closed)
-  }
+  };
 
   const t: T.Tree<number, S> = T.fromRoot(0, initial)
 
