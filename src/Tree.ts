@@ -72,7 +72,7 @@ export const insert: <K, V>(
   })
 
 /**
- * Returns an ordered list of values from Roo for a given Node iterating over its parents recursively
+ * Returns an ordered list of values from Root for a given Node iterating over its parents recursively
  *
  * @example
  * ```ts
