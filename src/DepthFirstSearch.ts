@@ -53,49 +53,52 @@ export const depthFirstSearch: Search = async <S>(
 ): Promise<S[]> =>
   expandRecursively(
     goal,
-    PQ.of(0, T.fromRoot(0, initial)),
-    HS.empty(),
+    {
+      current: T.fromRoot(1, goal),
+      open: PQ.of(0, T.fromRoot(0, initial)),
+      closed: HS.empty(),
+    },
     eq,
     expand,
   )
 
 const expandRecursively = async <S>(
   goal: S,
-  open: PQ.PriorityQueue<T.Tree<number, S>>,
-  closed: HS.HashSet<S>,
+  state: State<S>,
   eq: Eq<S>,
   expand: Expand<S>,
 ): Promise<S[]> => {
-  const state: State<S> = {
-    current: T.fromRoot(1, goal),
-    open: open,
-    closed: closed,
-  }
-  const ns = poll(state)
+  const newState = poll(state)
 
-  if (ns === null) {
+  if (newState === null) {
     return []
   }
 
-  if (isDone(eq)(goal)(ns)) {
-    return T.toArray(ns.current)
+  if (isDone(eq)(goal)(newState)) {
+    return T.toArray(newState.current)
   }
 
   const newStates: PQ.PriorityQueue<T.Tree<number, S>> = (
-    await Promise.all(expand(ns.current.value))
+    await Promise.all(expand(newState.current.value))
   )
-    .filter((state: S) => !HS.has(eq)(state)(ns.closed))
+    .filter((state: S) => !HS.has(eq)(state)(newState.closed))
     .map(
       (state: S): T.Tree<number, S> =>
-        T.insert(ns.current.key - 1, state)(ns.current),
+        T.insert(newState.current.key - 1, state)(newState.current),
     )
     .reduce(
       (
         priorityQueue: PQ.PriorityQueue<T.Tree<number, S>>,
         treeBranch: T.Tree<number, S>,
       ) => PQ.insert(treeBranch.key, treeBranch)(priorityQueue),
-      ns.open,
+      newState.open,
     )
 
-  return expandRecursively(goal, newStates, ns.closed, eq, expand)
+  const next: State<S> = {
+    current: newState.current,
+    open: newStates,
+    closed: newState.closed,
+  }
+
+  return expandRecursively(goal, next, eq, expand)
 }
