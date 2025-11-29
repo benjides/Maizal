@@ -37,6 +37,14 @@ export const poll: <T>(state: State<T>) => State<T> | null = <T>(
   }
 }
 
+export const isDone: <T>(
+  eq: Eq<T>,
+) => (node: T) => (state: State<T>) => boolean =
+  <T>(eq: Eq<T>) =>
+  (node: T) =>
+  (state: State<T>) =>
+    eq(node, state.current.value)
+
 export const depthFirstSearch: Search = async <S>(
   initial: S,
   goal: S,
@@ -69,7 +77,7 @@ const expandRecursively = async <S>(
     return []
   }
 
-  if (eq(goal, ns.current.value)) {
+  if (isDone(eq)(goal)(ns)) {
     return T.toArray(ns.current)
   }
 
