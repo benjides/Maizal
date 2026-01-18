@@ -62,6 +62,24 @@ export const depthFirstSearch: Search = async <S>(
     expand,
   )
 
+export const expandNewStates =
+  <S>(expand: Expand<S>) =>
+  (eq: Eq<S>) =>
+  async (state: State<S>) =>
+    (await Promise.all(expand(state.current.value)))
+      .filter((vector: S) => !HS.has(eq)(vector)(state.closed))
+      .map(
+        (vector: S): T.Tree<number, S> =>
+          T.insert(state.current.key - 1, vector)(state.current),
+      )
+      .reduce(
+        (
+          priorityQueue: PQ.PriorityQueue<T.Tree<number, S>>,
+          treeBranch: T.Tree<number, S>,
+        ) => PQ.insert(treeBranch.key, treeBranch)(priorityQueue),
+        state.open,
+      )
+
 const expandRecursively = async <S>(
   goal: S,
   state: State<S>,
@@ -78,21 +96,8 @@ const expandRecursively = async <S>(
     return T.toArray(newState.current)
   }
 
-  const newStates: PQ.PriorityQueue<T.Tree<number, S>> = (
-    await Promise.all(expand(newState.current.value))
-  )
-    .filter((state: S) => !HS.has(eq)(state)(newState.closed))
-    .map(
-      (state: S): T.Tree<number, S> =>
-        T.insert(newState.current.key - 1, state)(newState.current),
-    )
-    .reduce(
-      (
-        priorityQueue: PQ.PriorityQueue<T.Tree<number, S>>,
-        treeBranch: T.Tree<number, S>,
-      ) => PQ.insert(treeBranch.key, treeBranch)(priorityQueue),
-      newState.open,
-    )
+  const newStates: PQ.PriorityQueue<T.Tree<number, S>> =
+    await expandNewStates(expand)(eq)(newState)
 
   const next: State<S> = {
     current: newState.current,
