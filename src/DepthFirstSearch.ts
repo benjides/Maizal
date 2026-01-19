@@ -61,6 +61,7 @@ export const depthFirstSearch: Search = async <S>(
     eq,
     expand,
     isDone(eq)(goal),
+    expandNewStates(expand)(eq),
   )
 
 export const expandNewStates =
@@ -87,6 +88,7 @@ const expandRecursively = async <S>(
   eq: Eq<S>,
   expand: Expand<S>,
   isGoal: (state: State<S>) => boolean,
+  expandState: (state: State<S>) => Promise<PQ.PriorityQueue<T.Tree<number, S>>>,
 ): Promise<S[]> => {
   const newState = poll(state)
 
@@ -98,8 +100,7 @@ const expandRecursively = async <S>(
     return T.toArray(newState.current)
   }
 
-  const newStates: PQ.PriorityQueue<T.Tree<number, S>> =
-    await expandNewStates(expand)(eq)(newState)
+  const newStates: PQ.PriorityQueue<T.Tree<number, S>> = await expandState(newState)
 
   const next: State<S> = {
     current: newState.current,
@@ -107,5 +108,5 @@ const expandRecursively = async <S>(
     closed: newState.closed,
   }
 
-  return expandRecursively(goal, next, eq, expand, isGoal)
+  return expandRecursively(goal, next, eq, expand, isGoal, expandState)
 }
