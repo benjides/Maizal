@@ -60,6 +60,7 @@ export const depthFirstSearch: Search = async <S>(
     },
     eq,
     expand,
+    isDone(eq)(goal),
   )
 
 export const expandNewStates =
@@ -85,6 +86,7 @@ const expandRecursively = async <S>(
   state: State<S>,
   eq: Eq<S>,
   expand: Expand<S>,
+  isGoal: (state: State<S>) => boolean,
 ): Promise<S[]> => {
   const newState = poll(state)
 
@@ -92,7 +94,7 @@ const expandRecursively = async <S>(
     return []
   }
 
-  if (isDone(eq)(goal)(newState)) {
+  if (isGoal(newState)) {
     return T.toArray(newState.current)
   }
 
@@ -105,5 +107,5 @@ const expandRecursively = async <S>(
     closed: newState.closed,
   }
 
-  return expandRecursively(goal, next, eq, expand)
+  return expandRecursively(goal, next, eq, expand, isGoal)
 }
