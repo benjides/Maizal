@@ -33,6 +33,11 @@ describe('PriorityQueue', () => {
   }
 
   const ageOrd: Ord<Person> = (a: Person, b) => b.age - a.age
+  const insertPerson: (
+    person: Person,
+  ) => (priorityQueue: PriorityQueue<Person>) => PriorityQueue<Person> = (
+    person: Person,
+  ) => insert(ageOrd)(person)
 
   describe('constructor', () => {
     it('creates empty', () => {
@@ -55,9 +60,9 @@ describe('PriorityQueue', () => {
   })
   describe('insert', () => {
     it('inserts value at last position', () => {
-      const personsPriorityQueue = insert(ageOrd)(jane)(empty())
+      const personsPriorityQueue = insertPerson(jane)(empty())
 
-      const priorityQueueValues = insert(ageOrd)(john)(personsPriorityQueue)
+      const priorityQueueValues = insertPerson(john)(personsPriorityQueue)
 
       const expectedPriorityQueueValues: Person[] = [jane, john]
       assert.deepStrictEqual(
@@ -67,9 +72,9 @@ describe('PriorityQueue', () => {
     })
 
     it('inserts value at first position', () => {
-      const personsPriorityQueue = insert(ageOrd)(john)(empty())
+      const personsPriorityQueue = insertPerson(john)(empty())
 
-      const priorityQueueValues = insert(ageOrd)(jane)(personsPriorityQueue)
+      const priorityQueueValues = insertPerson(jane)(personsPriorityQueue)
 
       const expectedPriorityQueueValues: Person[] = [jane, john]
       assert.deepStrictEqual(
@@ -79,11 +84,11 @@ describe('PriorityQueue', () => {
     })
 
     it('inserts value at the middle position', () => {
-      const personsPriorityQueue = insert(ageOrd)(jane)(
-        insert(ageOrd)(john)(empty()),
+      const personsPriorityQueue = insertPerson(jane)(
+        insertPerson(john)(empty()),
       )
 
-      const priorityQueueValues = insert(ageOrd)(sally)(personsPriorityQueue)
+      const priorityQueueValues = insertPerson(sally)(personsPriorityQueue)
 
       const expectedPriorityQueueValues: Person[] = [jane, sally, john]
       assert.deepStrictEqual(
@@ -93,9 +98,9 @@ describe('PriorityQueue', () => {
     })
 
     it('inserts after in case of same priority', () => {
-      const personsPriorityQueue = insert(ageOrd)(jane)(empty())
+      const personsPriorityQueue = insertPerson(jane)(empty())
 
-      const priorityQueueValues = insert(ageOrd)(jasmine)(personsPriorityQueue)
+      const priorityQueueValues = insertPerson(jasmine)(personsPriorityQueue)
 
       const expectedPriorityQueueValues: Person[] = [jane, jasmine]
       assert.deepStrictEqual(
@@ -106,8 +111,8 @@ describe('PriorityQueue', () => {
   })
   describe('poll', () => {
     it('polls non empty PriorityQueue', () => {
-      const personsPriorityQueue = insert(ageOrd)(jane)(
-        insert(ageOrd)(john)(empty()),
+      const personsPriorityQueue = insertPerson(jane)(
+        insertPerson(john)(empty()),
       )
 
       const [person, modifiedQueue] = poll(personsPriorityQueue)
