@@ -3,6 +3,7 @@ import {
   empty,
   insert,
   of,
+  Ord,
   poll,
   type PriorityQueue,
   values,
@@ -12,6 +13,8 @@ type Person = {
   age: number
   name: string
 }
+
+const ageOrd: Ord<Person> = (a: Person, b) => b.age - a.age
 
 describe('PriorityQueue', () => {
   describe('constructor', () => {
@@ -27,7 +30,7 @@ describe('PriorityQueue', () => {
         name: 'Jane',
       }
 
-      const priorityQueue: PriorityQueue<Person> = of(jane.age, jane)
+      const priorityQueue: PriorityQueue<Person> = of(jane)
 
       const expectedPriorityQueueValues: Person[] = [
         {
@@ -44,13 +47,13 @@ describe('PriorityQueue', () => {
         age: 27,
         name: 'Jane',
       }
-      const personsPriorityQueue = insert(jane.age, jane)(empty())
+      const personsPriorityQueue = insert(ageOrd)(jane)(empty())
 
       const john: Person = {
         age: 34,
         name: 'John',
       }
-      const priorityQueueValues = insert(john.age, john)(personsPriorityQueue)
+      const priorityQueueValues = insert(ageOrd)(john)(personsPriorityQueue)
 
       const expectedPriorityQueueValues: Person[] = [
         {
@@ -73,13 +76,13 @@ describe('PriorityQueue', () => {
         age: 34,
         name: 'John',
       }
-      const personsPriorityQueue = insert(john.age, john)(empty())
+      const personsPriorityQueue = insert(ageOrd)(john)(empty())
 
       const jane: Person = {
         age: 27,
         name: 'Jane',
       }
-      const priorityQueueValues = insert(jane.age, jane)(personsPriorityQueue)
+      const priorityQueueValues = insert(ageOrd)(jane)(personsPriorityQueue)
 
       const expectedPriorityQueueValues: Person[] = [
         {
@@ -106,16 +109,15 @@ describe('PriorityQueue', () => {
         age: 34,
         name: 'John',
       }
-      const personsPriorityQueue = insert(
-        jane.age,
-        jane,
-      )(insert(john.age, john)(empty()))
+      const personsPriorityQueue = insert(ageOrd)(jane)(
+        insert(ageOrd)(john)(empty()),
+      )
 
       const sally: Person = {
         age: 28,
         name: 'Sally',
       }
-      const priorityQueueValues = insert(sally.age, sally)(personsPriorityQueue)
+      const priorityQueueValues = insert(ageOrd)(sally)(personsPriorityQueue)
 
       const expectedPriorityQueueValues: Person[] = [
         {
@@ -142,13 +144,13 @@ describe('PriorityQueue', () => {
         age: 27,
         name: 'Jane',
       }
-      const personsPriorityQueue = insert(jane.age, jane)(empty())
+      const personsPriorityQueue = insert(ageOrd)(jane)(empty())
 
       const sally = {
         age: 27,
         name: 'Sally',
       }
-      const priorityQueueValues = insert(sally.age, sally)(personsPriorityQueue)
+      const priorityQueueValues = insert(ageOrd)(sally)(personsPriorityQueue)
 
       const expectedPriorityQueueValues: Person[] = [
         {
@@ -176,10 +178,9 @@ describe('PriorityQueue', () => {
         age: 34,
         name: 'John',
       }
-      const personsPriorityQueue = insert(
-        jane.age,
-        jane,
-      )(insert(john.age, john)(empty()))
+      const personsPriorityQueue = insert(ageOrd)(jane)(
+        insert(ageOrd)(john)(empty()),
+      )
 
       const [person, modifiedQueue] = poll(personsPriorityQueue)
 

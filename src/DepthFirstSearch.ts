@@ -54,7 +54,7 @@ export const depthFirstSearch: Search = async <S>(
   expandRecursively(
     {
       current: T.fromRoot(1, goal),
-      open: PQ.of(0, T.fromRoot(0, initial)),
+      open: PQ.of(T.fromRoot(0, initial)),
       closed: HS.empty(),
     },
     isDone(eq)(goal),
@@ -75,7 +75,10 @@ export const expandNewStates =
         (
           priorityQueue: PQ.PriorityQueue<T.Tree<number, S>>,
           treeBranch: T.Tree<number, S>,
-        ) => PQ.insert(treeBranch.key, treeBranch)(priorityQueue),
+        ) =>
+          PQ.insert(
+            (a: T.Tree<number, S>, b: T.Tree<number, S>) => b.key - a.key,
+          )(treeBranch)(priorityQueue),
         state.open,
       )
 
