@@ -8,21 +8,15 @@ export type Eq<T> = (x: T, y: T) => boolean
 
 export const graph: <S>() => Graph<S> = <S>(): Graph<S> => []
 
-export const vertex: <S>(
-  eq: Eq<S>,
-  vertex: S,
-) => (graph: Graph<S>) => Graph<S> =
-  <S>(eq: Eq<S>, vertex: S) =>
-  (graph: Graph<S>) =>
-    hasVertex(eq, vertex)(graph)
-      ? graph
-      : [
-          ...graph,
-          {
-            data: vertex,
-            adjacentVertexes: [],
-          },
-        ]
+export const vertex: <S>(vertex: S) => (graph: Graph<S>) => Graph<S> =
+  <S>(vertex: S) =>
+  (graph: Graph<S>) => [
+    ...graph,
+    {
+      data: vertex,
+      adjacentVertexes: [],
+    },
+  ]
 
 export const hasVertex: <S>(
   eq: Eq<S>,
@@ -84,9 +78,6 @@ export const adjacent =
   (graph: Graph<S>): Graph<S> =>
     adjacent.reduce(
       (accumulatedGraph: Graph<S>, v: S) =>
-        edge(eq, x, v)(vertex(eq, v)(accumulatedGraph)),
+        edge(eq, x, v)(vertex(v)(accumulatedGraph)),
       graph,
     )
-
-export const size: <S>(graph: Graph<S>) => number = <S>(graph: Graph<S>) =>
-  graph.length

@@ -1,25 +1,20 @@
 import { assert, describe, it } from 'vitest'
 import {
+  adjacent,
   edge,
   Eq,
-  Graph,
   graph,
-  hasVertex,
+  Graph,
   hasEdge,
-  size,
+  hasVertex,
   vertex,
-  adjacent,
 } from '../src/Graph'
 
 type Person = string
 
 const personEq: Eq<Person> = (a: Person, b: Person): boolean => a === b
 
-const person: (person: Person) => (graph: Graph<string>) => Graph<string> = (
-  person: Person,
-) => vertex(personEq, person)
-
-const friends: (
+const addFriends: (
   a: Person,
   b: Person,
 ) => (graph: Graph<string>) => Graph<string> = (a: Person, b: Person) =>
@@ -33,17 +28,11 @@ describe('Graph', () => {
     it('adds given vertex', () => {
       const john: Person = 'John'
 
-      const networkGraph = person(john)(graph<Person>())
+      const networkGraph = vertex(john)(graph<Person>())
 
       assert.isTrue(hasVertex(personEq, john)(networkGraph))
-    })
-
-    it('does not add existing vertex', () => {
-      const john: Person = 'John'
-
-      const networkGraph = person(john)(person(john)(graph<Person>()))
-
-      assert.deepStrictEqual(size(networkGraph), 1)
+      const sally: Person = 'sally'
+      assert.isFalse(hasVertex(personEq, sally)(networkGraph))
     })
   })
 
@@ -52,10 +41,10 @@ describe('Graph', () => {
       const john: Person = 'John'
       const jane: Person = 'Jane'
 
-      const networkGraph = friends(
+      const networkGraph = addFriends(
         john,
         jane,
-      )(person(jane)(person(john)(graph())))
+      )(vertex(jane)(vertex(john)(graph())))
 
       assert.isTrue(areFriends(jane, john)(networkGraph))
       assert.isTrue(areFriends(john, jane)(networkGraph))
@@ -69,7 +58,7 @@ describe('Graph', () => {
       const sally: Person = 'Sally'
 
       const networkGraph = adjacent(personEq, john, [jane, sally])(
-        person(john)(graph()),
+        vertex(john)(graph()),
       )
 
       assert.isTrue(areFriends(john, jane)(networkGraph))
