@@ -73,7 +73,7 @@ const hasBeenVisited =
 const expandRecursively = async <S>(
   openSet: OpenSet<S>,
   closedSet: ClosedSet<S>,
-  isGoal: (node: S) => boolean,
+  isGoal: (state: S) => boolean,
   eq: Eq<S>,
   expand: Expand<S>,
 ): Promise<S[]> => {
