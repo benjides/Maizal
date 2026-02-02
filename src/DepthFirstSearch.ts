@@ -22,6 +22,8 @@ type Node<S> = {
 
 type OpenSet<S> = PriorityQueue<Node<S>>
 
+type ClosedSet<S> = HashSet<S>
+
 const isDone: <S>(eq: Eq<S>, node: S) => (state: S) => boolean =
   <T>(eq: Eq<T>, node: T) =>
   (state: T) =>
@@ -64,7 +66,7 @@ const hasBeenVisited =
 
 const expandRecursively = async <S>(
   openSet: OpenSet<S>,
-  closedSet: HS.HashSet<S>,
+  closedSet: ClosedSet<S>,
   isGoal: (node: S) => boolean,
   eq: Eq<S>,
   expand: Expand<S>,
