@@ -53,9 +53,9 @@ const nodeInsert: <S>(node: Node<S>) => (openSet: OpenSet<S>) => OpenSet<S> =
     priorityQueueInsert(nodeOrd<S>())(node)(openSet)
 
 const hasBeenVisited =
-  <S>(eq: Eq<S>, hashSet: HashSet<S>) =>
+  <S>(eq: Eq<S>, closedSet: ClosedSet<S>) =>
   (state: S) =>
-    has(eq)(state)(hashSet)
+    has(eq)(state)(closedSet)
 
 const expandRecursively = async <S>(
   openSet: OpenSet<S>,
@@ -74,7 +74,7 @@ const expandRecursively = async <S>(
     return toArray(n)
   }
 
-  const closed: HashSet<S> = hashSetInsert(n.state)(closedSet)
+  const closed: ClosedSet<S> = hashSetInsert(n.state)(closedSet)
 
   const newStates: OpenSet<S> = (await Promise.all(expand(n.state)))
     .filter((state: S) => !hasBeenVisited(eq, closed)(state))
