@@ -71,7 +71,7 @@ export const depthFirstSearch: Search = async <S>(
       closed: HS.empty(),
     },
     isDone(eq, goal),
-    expandNewStates(expand)(eq),
+    expandNewStates(expand, hasBeenVisited(eq)),
   )
 
 const nodeOrd = <S>(a: Node<S>, b: Node<S>) => b.key - a.key
@@ -81,18 +81,22 @@ const nodeInsert: <S>(node: Node<S>) => (openSet: OpenSet<S>) => OpenSet<S> =
   (openSet: OpenSet<S>) =>
     PQ.insert(nodeOrd)(node)(openSet)
 
-const hasBeenVisited: <S>(eq: Eq<S>) => (s: S) => (hashSet: HashSet<S>) => boolean =
+const hasBeenVisited: <S>(
+  eq: Eq<S>,
+) => (s: S) => (hashSet: HashSet<S>) => boolean =
   <S>(eq: Eq<S>) =>
   (s: S) =>
   (hashSet: HashSet<S>) =>
     HS.has(eq)(s)(hashSet)
 
 export const expandNewStates =
-  <S>(expand: Expand<S>) =>
-  (eq: Eq<S>) =>
+  <S>(
+    expand: Expand<S>,
+    hasBeenVisited: (s: S) => (hashSet: HashSet<S>) => boolean,
+  ) =>
   async (state: State<S>) =>
     (await Promise.all(expand(state.current.value)))
-      .filter((vector: S) => !hasBeenVisited(eq)(vector)(state.closed))
+      .filter((vector: S) => !hasBeenVisited(vector)(state.closed))
       .map(
         (vector: S): Node<S> => ({
           key: state.current.key - 1,
