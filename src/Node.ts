@@ -1,5 +1,6 @@
 import { Ord } from './PriorityQueue'
-import { Evaluate } from './DepthFirstSearch'
+
+import { Evaluate } from './Search'
 
 export type Node<S> = {
   key: number

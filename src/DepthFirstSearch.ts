@@ -1,95 +1,9 @@
-import {
-  poll,
-  priorityQueue,
-  PriorityQueue,
-  insert as priorityQueueInsert,
-} from './PriorityQueue'
-import { hashSet, has, HashSet, insert as hashSetInsert } from './HashSet'
-import { initial, node, Node, nodeOrd, toArray } from './Node'
-
-export type Eq<S> = (a: S, b: S) => boolean
-
-export type Expand<S> = (s: S) => Promise<S>[]
-
-export type Search = <S>(
-  initial: S,
-  goal: S,
-  eq: Eq<S>,
-  expand: Expand<S>,
-) => Promise<S[]>
-
-type OpenSet<S> = PriorityQueue<Node<S>>
-
-type ClosedSet<S> = HashSet<S>
-
-export type Evaluate<S> = (node: Node<S>) => number
-
-const isDone: <S>(eq: Eq<S>, node: S) => (state: S) => boolean =
-  <T>(eq: Eq<T>, node: T) =>
-  (state: T) =>
-    eq(node, state)
-
-const openSet: <S>(state: S) => OpenSet<S> = <S>(state: S) =>
-  priorityQueue(initial(state))
-
-const closedSet: <S>() => ClosedSet<S> = <S>() => hashSet<S>()
+import { Node } from './Node'
+import { Evaluate, Search, search } from './Search'
 
 const depthFirstSearchEvaluate: <S>() => Evaluate<S> =
   <S>() =>
   (node: Node<S>) =>
     node.key - 1
 
-export const search =
-  <S>(evaluate: Evaluate<S>) =>
-  async (initial: S, goal: S, eq: Eq<S>, expand: Expand<S>): Promise<S[]> =>
-    expandRecursively(
-      openSet(initial),
-      closedSet(),
-      isDone(eq, goal),
-      node(evaluate),
-      eq,
-      expand,
-    )
-
 export const depthFirstSearch: Search = search(depthFirstSearchEvaluate())
-
-const nodeInsert: <S>(node: Node<S>) => (openSet: OpenSet<S>) => OpenSet<S> =
-  <S>(node: Node<S>) =>
-  (openSet: OpenSet<S>) =>
-    priorityQueueInsert(nodeOrd<S>())(node)(openSet)
-
-const hasBeenVisited =
-  <S>(eq: Eq<S>, closedSet: ClosedSet<S>) =>
-  (state: S) =>
-    has(eq)(state)(closedSet)
-
-const expandRecursively = async <S>(
-  openSet: OpenSet<S>,
-  closedSet: ClosedSet<S>,
-  isGoal: (state: S) => boolean,
-  node: (node: Node<S>) => (state: S) => Node<S>,
-  eq: Eq<S>,
-  expand: Expand<S>,
-): Promise<S[]> => {
-  const [n, priorityQueue] = poll(openSet)
-
-  if (n === null) {
-    return []
-  }
-
-  if (isGoal(n.state)) {
-    return toArray(n)
-  }
-
-  const closed: ClosedSet<S> = hashSetInsert(n.state)(closedSet)
-
-  const newStates: OpenSet<S> = (await Promise.all(expand(n.state)))
-    .filter((state: S) => !hasBeenVisited(eq, closed)(state))
-    .map(node(n))
-    .reduce(
-      (openSet: OpenSet<S>, node: Node<S>) => nodeInsert(node)(openSet),
-      priorityQueue,
-    )
-
-  return expandRecursively(newStates, closed, isGoal, node, eq, expand)
-}
