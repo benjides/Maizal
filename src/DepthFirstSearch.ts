@@ -16,47 +16,25 @@ export type Search = <S>(
 
 type Node<S> = {
   key: number
-  value: S
+  state: S
   parent: Node<S> | null
 }
 
 type OpenSet<S> = PriorityQueue<Node<S>>
 
-type State<S> = {
-  current: Node<S>
-  open: OpenSet<S>
-  closed: HS.HashSet<S>
-}
-
-export const poll: <T>(state: State<T>) => State<T> | null = <T>(
-  state: State<T>,
-) => {
-  const [currentState, priorityQueue] = PQ.poll(state.open)
-
-  if (currentState === null) {
-    return null
-  }
-
-  return {
-    current: currentState,
-    closed: HS.insert(currentState.value)(state.closed),
-    open: priorityQueue,
-  }
-}
-
-const isDone: <T>(eq: Eq<T>, node: T) => (state: T) => boolean =
+const isDone: <S>(eq: Eq<S>, node: S) => (state: S) => boolean =
   <T>(eq: Eq<T>, node: T) =>
   (state: T) =>
     eq(node, state)
 
-const initialNode: <S>(value: S) => Node<S> = <S>(value: S): Node<S> => ({
+const initialNode: <S>(state: S) => Node<S> = <S>(state: S): Node<S> => ({
   key: 0,
-  value: value,
+  state: state,
   parent: null,
 })
 
 const toArray: <S>(node: Node<S>) => S[] = <S>(node: Node<S>) =>
-  node.parent === null ? [node.value] : [...toArray(node.parent), node.value]
+  node.parent === null ? [node.state] : [...toArray(node.parent), node.state]
 
 export const depthFirstSearch: Search = async <S>(
   initial: S,
@@ -65,11 +43,8 @@ export const depthFirstSearch: Search = async <S>(
   expand: Expand<S>,
 ): Promise<S[]> =>
   expandRecursively(
-    {
-      current: initialNode(initial),
-      open: PQ.of(initialNode(initial)),
-      closed: HS.empty(),
-    },
+    PQ.of(initialNode(initial)),
+    HS.empty(),
     isDone(eq, goal),
     eq,
     expand,
@@ -84,47 +59,41 @@ const nodeInsert: <S>(node: Node<S>) => (openSet: OpenSet<S>) => OpenSet<S> =
 
 const hasBeenVisited =
   <S>(eq: Eq<S>, hashSet: HashSet<S>) =>
-  (s: S) =>
-    HS.has(eq)(s)(hashSet)
+  (state: S) =>
+    HS.has(eq)(state)(hashSet)
 
 const expandRecursively = async <S>(
-  state: State<S>,
+  openSet: OpenSet<S>,
+  closedSet: HS.HashSet<S>,
   isGoal: (node: S) => boolean,
   eq: Eq<S>,
   expand: Expand<S>,
 ): Promise<S[]> => {
-  const newState = poll(state)
+  const [node, priorityQueue] = PQ.poll(openSet)
 
-  if (newState === null) {
+  if (node === null) {
     return []
   }
 
-  if (isGoal(newState.current.value)) {
-    return toArray(newState.current)
+  if (isGoal(node.state)) {
+    return toArray(node)
   }
 
-  const newStates: OpenSet<S> = (
-    await Promise.all(expand(newState.current.value))
-  )
-    .filter((vector: S) => !hasBeenVisited(eq, newState.closed)(vector))
+  const closed: HS.HashSet<S> = HS.insert(node.state)(closedSet)
+
+  const newStates: OpenSet<S> = (await Promise.all(expand(node.state)))
+    .filter((state: S) => !hasBeenVisited(eq, closed)(state))
     .map(
-      (vector: S): Node<S> => ({
-        key: newState.current.key - 1,
-        value: vector,
-        parent: newState.current,
+      (state: S): Node<S> => ({
+        key: node.key - 1,
+        state: state,
+        parent: node,
       }),
     )
     .reduce(
-      (priorityQueue: OpenSet<S>, node: Node<S>) =>
-        nodeInsert(node)(priorityQueue),
-      newState.open,
+      (openSet: OpenSet<S>, node: Node<S>) => nodeInsert(node)(openSet),
+      priorityQueue,
     )
 
-  const next: State<S> = {
-    current: newState.current,
-    open: newStates,
-    closed: newState.closed,
-  }
-
-  return expandRecursively(next, isGoal, eq, expand)
+  return expandRecursively(newStates, closed, isGoal, eq, expand)
 }
