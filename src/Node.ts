@@ -1,4 +1,5 @@
 import { Ord } from './PriorityQueue'
+import { Evaluate } from './DepthFirstSearch'
 
 export type Node<S> = {
   key: number
@@ -7,10 +8,10 @@ export type Node<S> = {
 }
 
 export const node =
-  <S>(evaluationFunction: (node: Node<S>) => number) =>
+  <S>(evaluate: Evaluate<S>) =>
   (node: Node<S>) =>
   (state: S) => ({
-    key: evaluationFunction(node),
+    key: evaluate(node),
     state: state,
     parent: node,
   })

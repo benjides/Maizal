@@ -22,6 +22,8 @@ type OpenSet<S> = PriorityQueue<Node<S>>
 
 type ClosedSet<S> = HashSet<S>
 
+export type Evaluate<S> = (node: Node<S>) => number
+
 const isDone: <S>(eq: Eq<S>, node: S) => (state: S) => boolean =
   <T>(eq: Eq<T>, node: T) =>
   (state: T) =>
@@ -32,7 +34,7 @@ const openSet: <S>(state: S) => OpenSet<S> = <S>(state: S) =>
 
 const closedSet: <S>() => ClosedSet<S> = <S>() => hashSet<S>()
 
-const depthFirstSearchEvaluationFunction: <S>() => (node: Node<S>) => number =
+const depthFirstSearchEvaluate: <S>() => Evaluate<S> =
   <S>() =>
   (node: Node<S>) =>
     node.key - 1
@@ -47,7 +49,7 @@ export const depthFirstSearch: Search = async <S>(
     openSet(initial),
     closedSet(),
     isDone(eq, goal),
-    node(depthFirstSearchEvaluationFunction()),
+    node(depthFirstSearchEvaluate()),
     eq,
     expand,
   )
