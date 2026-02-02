@@ -75,6 +75,11 @@ export const depthFirstSearch: Search = async <S>(
 
 const nodeOrd = <S>(a: Node<S>, b: Node<S>) => b.key - a.key
 
+const nodeInsert: <S>(node: Node<S>) => (openSet: OpenSet<S>) => OpenSet<S> =
+  <S>(node: Node<S>) =>
+  (openSet: OpenSet<S>) =>
+    PQ.insert(nodeOrd)(node)(openSet)
+
 export const expandNewStates =
   <S>(expand: Expand<S>) =>
   (eq: Eq<S>) =>
@@ -90,7 +95,7 @@ export const expandNewStates =
       )
       .reduce(
         (priorityQueue: OpenSet<S>, node: Node<S>) =>
-          PQ.insert(nodeOrd)(node)(priorityQueue),
+          nodeInsert(node)(priorityQueue),
         state.open,
       )
 
