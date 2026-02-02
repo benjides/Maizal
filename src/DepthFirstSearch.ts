@@ -39,21 +39,19 @@ const depthFirstSearchEvaluate: <S>() => Evaluate<S> =
   (node: Node<S>) =>
     node.key - 1
 
-export const depthFirstSearch: Search = async <S>(
-  initial: S,
-  goal: S,
-  eq: Eq<S>,
-  expand: Expand<S>,
-): Promise<S[]> => {
-  return expandRecursively(
-    openSet(initial),
-    closedSet(),
-    isDone(eq, goal),
-    node(depthFirstSearchEvaluate()),
-    eq,
-    expand,
-  )
-}
+export const search =
+  <S>(evaluate: Evaluate<S>) =>
+  async (initial: S, goal: S, eq: Eq<S>, expand: Expand<S>): Promise<S[]> =>
+    expandRecursively(
+      openSet(initial),
+      closedSet(),
+      isDone(eq, goal),
+      node(evaluate),
+      eq,
+      expand,
+    )
+
+export const depthFirstSearch: Search = search(depthFirstSearchEvaluate())
 
 const nodeInsert: <S>(node: Node<S>) => (openSet: OpenSet<S>) => OpenSet<S> =
   <S>(node: Node<S>) =>
