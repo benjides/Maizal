@@ -41,6 +41,8 @@ const toArray: <S>(node: Node<S>) => S[] = <S>(node: Node<S>) =>
 const openSet: <S>(initial: S) => OpenSet<S> = <S>(initial: S) =>
   PQ.of(initialNode(initial))
 
+const closedSet: <S>() => ClosedSet<S> = <S>() => HS.empty<S>()
+
 export const depthFirstSearch: Search = async <S>(
   initial: S,
   goal: S,
@@ -49,7 +51,7 @@ export const depthFirstSearch: Search = async <S>(
 ): Promise<S[]> => {
   return expandRecursively(
     openSet(initial),
-    HS.empty(),
+    closedSet(),
     isDone(eq, goal),
     eq,
     expand,
