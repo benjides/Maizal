@@ -70,6 +70,14 @@ const hasBeenVisited =
   (state: S) =>
     HS.has(eq)(state)(hashSet)
 
+const toNode: <S>(node: Node<S>) => (state: S) => Node<S> =
+  <S>(node: Node<S>) =>
+  (state: S) => ({
+    key: node.key - 1,
+    state: state,
+    parent: node,
+  })
+
 const expandRecursively = async <S>(
   openSet: OpenSet<S>,
   closedSet: ClosedSet<S>,
@@ -91,13 +99,7 @@ const expandRecursively = async <S>(
 
   const newStates: OpenSet<S> = (await Promise.all(expand(node.state)))
     .filter((state: S) => !hasBeenVisited(eq, closed)(state))
-    .map(
-      (state: S): Node<S> => ({
-        key: node.key - 1,
-        state: state,
-        parent: node,
-      }),
-    )
+    .map(toNode(node))
     .reduce(
       (openSet: OpenSet<S>, node: Node<S>) => nodeInsert(node)(openSet),
       priorityQueue,
