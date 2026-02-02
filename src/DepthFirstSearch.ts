@@ -40,13 +40,10 @@ export const poll: <T>(state: State<T>) => State<T> | null = <T>(
   }
 }
 
-const isDone: <T>(
-  eq: Eq<T>,
-) => (node: T) => (state: State<T>) => boolean =
-  <T>(eq: Eq<T>) =>
-  (node: T) =>
-  (state: State<T>) =>
-    eq(node, state.current.value)
+const isDone: <T>(eq: Eq<T>, node: T) => (state: T) => boolean =
+  <T>(eq: Eq<T>, node: T) =>
+  (state: T) =>
+    eq(node, state)
 
 export const depthFirstSearch: Search = async <S>(
   initial: S,
@@ -60,7 +57,7 @@ export const depthFirstSearch: Search = async <S>(
       open: PQ.of(T.fromRoot(0, initial)),
       closed: HS.empty(),
     },
-    isDone(eq)(goal),
+    isDone(eq, goal),
     expandNewStates(expand)(eq),
   )
 
@@ -84,7 +81,7 @@ export const expandNewStates =
 
 const expandRecursively = async <S>(
   state: State<S>,
-  isGoal: (state: State<S>) => boolean,
+  isGoal: (node: S) => boolean,
   expandState: (state: State<S>) => Promise<OpenSet<S>>,
 ): Promise<S[]> => {
   const newState = poll(state)
@@ -93,7 +90,7 @@ const expandRecursively = async <S>(
     return []
   }
 
-  if (isGoal(newState)) {
+  if (isGoal(newState.current.value)) {
     return T.toArray(newState.current)
   }
 
