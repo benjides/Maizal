@@ -19,10 +19,10 @@ export type Eq<T> = (x: T, y: T) => boolean
  *
  * @example
  * ```ts
- * assert.deepStrictEqual(empty(), [2])
+ * assert.deepStrictEqual(hashSet(), [2])
  * ```
  */
-export const empty: <T>() => HashSet<T> = () => []
+export const hashSet: <T>() => HashSet<T> = () => []
 
 /**
  * Inserts an element for a given HashSet. Does not check if the element is already present

@@ -1,6 +1,6 @@
 import { assert, describe, it } from 'vitest'
 
-import { empty, has, insert } from '../src/HashSet'
+import { hashSet, has, insert } from '../src/HashSet'
 
 type Vector = {
   x: number
@@ -10,7 +10,7 @@ type Vector = {
 describe('HashSet', () => {
   describe('constructor', () => {
     it('creates empty', () => {
-      assert.deepStrictEqual(empty<Vector>(), [])
+      assert.deepStrictEqual(hashSet<Vector>(), [])
     })
   })
 
@@ -21,7 +21,7 @@ describe('HashSet', () => {
         y: 8,
       }
 
-      const hashSet = insert(vector)(empty())
+      const hashSet = insert(vector)(hashSet())
 
       const expectedHashSetValues: Vector[] = [
         {
@@ -35,7 +35,7 @@ describe('HashSet', () => {
 
   describe('has', () => {
     it('does not have element for an empty HashSet', () => {
-      const hashSet = empty<Vector>()
+      const hashSet = hashSet<Vector>()
 
       const hasVector = has(
         (a: Vector, b: Vector) => a.x === b.x && b.y === b.y,
@@ -54,7 +54,7 @@ describe('HashSet', () => {
         y: 8,
       }
 
-      const hashSet = insert(vector)(empty())
+      const hashSet = insert(vector)(hashSet())
 
       const hasVector = has(
         (a: Vector, b: Vector) => a.x === b.x && b.y === b.y,
@@ -69,7 +69,7 @@ describe('HashSet', () => {
         y: 8,
       }
 
-      const hashSet = insert(vector)(empty())
+      const hashSet = insert(vector)(hashSet())
 
       const hasVector = has(
         (a: Vector, b: Vector) => a.x === b.x && b.y === b.y,
@@ -88,7 +88,7 @@ describe('HashSet', () => {
         y: 8,
       }
 
-      const hashSet = insert(vector)(empty())
+      const hashSet = insert(vector)(hashSet())
 
       const hasVector = has(
         (a: Vector, b: Vector) => a.x === b.x && b.y === b.y,

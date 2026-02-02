@@ -1,6 +1,6 @@
 import * as PQ from './PriorityQueue'
 import { PriorityQueue } from './PriorityQueue'
-import { empty, has, HashSet, insert } from './HashSet'
+import { hashSet, has, HashSet, insert } from './HashSet'
 import { initial, node, Node, nodeOrd, toArray } from './Node'
 
 export type Eq<S> = (a: S, b: S) => boolean
@@ -26,7 +26,7 @@ const isDone: <S>(eq: Eq<S>, node: S) => (state: S) => boolean =
 const openSet: <S>(state: S) => OpenSet<S> = <S>(state: S) =>
   PQ.of(initial(state))
 
-const closedSet: <S>() => ClosedSet<S> = <S>() => empty<S>()
+const closedSet: <S>() => ClosedSet<S> = <S>() => hashSet<S>()
 
 export const depthFirstSearch: Search = async <S>(
   initial: S,
