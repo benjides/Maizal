@@ -1,7 +1,6 @@
 import * as PQ from './PriorityQueue'
 import { PriorityQueue } from './PriorityQueue'
-import * as HS from './HashSet'
-import { HashSet } from './HashSet'
+import { empty, has, HashSet, insert } from './HashSet'
 import { initial, node, Node, nodeOrd, toArray } from './Node'
 
 export type Eq<S> = (a: S, b: S) => boolean
@@ -27,7 +26,7 @@ const isDone: <S>(eq: Eq<S>, node: S) => (state: S) => boolean =
 const openSet: <S>(state: S) => OpenSet<S> = <S>(state: S) =>
   PQ.of(initial(state))
 
-const closedSet: <S>() => ClosedSet<S> = <S>() => HS.empty<S>()
+const closedSet: <S>() => ClosedSet<S> = <S>() => empty<S>()
 
 export const depthFirstSearch: Search = async <S>(
   initial: S,
@@ -52,7 +51,7 @@ const nodeInsert: <S>(node: Node<S>) => (openSet: OpenSet<S>) => OpenSet<S> =
 const hasBeenVisited =
   <S>(eq: Eq<S>, hashSet: HashSet<S>) =>
   (state: S) =>
-    HS.has(eq)(state)(hashSet)
+    has(eq)(state)(hashSet)
 
 const expandRecursively = async <S>(
   openSet: OpenSet<S>,
@@ -71,7 +70,7 @@ const expandRecursively = async <S>(
     return toArray(n)
   }
 
-  const closed: HS.HashSet<S> = HS.insert(n.state)(closedSet)
+  const closed: HashSet<S> = insert(n.state)(closedSet)
 
   const newStates: OpenSet<S> = (await Promise.all(expand(n.state)))
     .filter((state: S) => !hasBeenVisited(eq, closed)(state))
