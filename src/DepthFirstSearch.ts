@@ -38,19 +38,23 @@ const initialNode: <S>(state: S) => Node<S> = <S>(state: S): Node<S> => ({
 const toArray: <S>(node: Node<S>) => S[] = <S>(node: Node<S>) =>
   node.parent === null ? [node.state] : [...toArray(node.parent), node.state]
 
+const openSet: <S>(initial: S) => OpenSet<S> = <S>(initial: S) =>
+  PQ.of(initialNode(initial))
+
 export const depthFirstSearch: Search = async <S>(
   initial: S,
   goal: S,
   eq: Eq<S>,
   expand: Expand<S>,
-): Promise<S[]> =>
-  expandRecursively(
-    PQ.of(initialNode(initial)),
+): Promise<S[]> => {
+  return expandRecursively(
+    openSet(initial),
     HS.empty(),
     isDone(eq, goal),
     eq,
     expand,
   )
+}
 
 const nodeOrd = <S>(a: Node<S>, b: Node<S>) => b.key - a.key
 
