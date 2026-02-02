@@ -40,7 +40,7 @@ export const poll: <T>(state: State<T>) => State<T> | null = <T>(
   }
 }
 
-export const isDone: <T>(
+const isDone: <T>(
   eq: Eq<T>,
 ) => (node: T) => (state: State<T>) => boolean =
   <T>(eq: Eq<T>) =>
