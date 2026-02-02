@@ -54,7 +54,7 @@ const initialNode: <S>(value: S) => Node<S> = <S>(value: S): Node<S> => ({
   parent: null,
 })
 
-export const toArray: <S>(node: Node<S>) => S[] = <S>(node: Node<S>) =>
+const toArray: <S>(node: Node<S>) => S[] = <S>(node: Node<S>) =>
   node.parent === null ? [node.value] : [...toArray(node.parent), node.value]
 
 export const depthFirstSearch: Search = async <S>(
