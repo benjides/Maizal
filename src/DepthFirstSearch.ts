@@ -1,7 +1,6 @@
 import * as PQ from './PriorityQueue'
-import * as T from './Tree'
-import * as HS from './HashSet'
 import { PriorityQueue } from './PriorityQueue'
+import * as HS from './HashSet'
 
 export type Eq<S> = (a: S, b: S) => boolean
 
@@ -14,7 +13,11 @@ export type Search = <S>(
   expand: Expand<S>,
 ) => Promise<S[]>
 
-type Node<S> = T.Tree<number, S>
+type Node<S> = {
+  key: number
+  value: S
+  parent: Node<S> | null
+}
 
 type OpenSet<S> = PriorityQueue<Node<S>>
 
@@ -45,6 +48,15 @@ const isDone: <T>(eq: Eq<T>, node: T) => (state: T) => boolean =
   (state: T) =>
     eq(node, state)
 
+const initialNode: <S>(value: S) => Node<S> = <S>(value: S): Node<S> => ({
+  key: 0,
+  value: value,
+  parent: null,
+})
+
+export const toArray: <S>(node: Node<S>) => S[] = <S>(node: Node<S>) =>
+  node.parent === null ? [node.value] : [...toArray(node.parent), node.value]
+
 export const depthFirstSearch: Search = async <S>(
   initial: S,
   goal: S,
@@ -53,8 +65,8 @@ export const depthFirstSearch: Search = async <S>(
 ): Promise<S[]> =>
   expandRecursively(
     {
-      current: T.fromRoot(1, goal),
-      open: PQ.of(T.fromRoot(0, initial)),
+      current: initialNode(initial),
+      open: PQ.of(initialNode(initial)),
       closed: HS.empty(),
     },
     isDone(eq, goal),
@@ -68,12 +80,15 @@ export const expandNewStates =
     (await Promise.all(expand(state.current.value)))
       .filter((vector: S) => !HS.has(eq)(vector)(state.closed))
       .map(
-        (vector: S): Node<S> =>
-          T.insert(state.current.key - 1, vector)(state.current),
+        (vector: S): Node<S> => ({
+          key: state.current.key - 1,
+          value: vector,
+          parent: state.current,
+        }),
       )
       .reduce(
-        (priorityQueue: OpenSet<S>, treeBranch: Node<S>) =>
-          PQ.insert((a: Node<S>, b: Node<S>) => b.key - a.key)(treeBranch)(
+        (priorityQueue: OpenSet<S>, node: Node<S>) =>
+          PQ.insert((a: Node<S>, b: Node<S>) => b.key - a.key)(node)(
             priorityQueue,
           ),
         state.open,
@@ -91,7 +106,7 @@ const expandRecursively = async <S>(
   }
 
   if (isGoal(newState.current.value)) {
-    return T.toArray(newState.current)
+    return toArray(newState.current)
   }
 
   const newStates: OpenSet<S> = await expandState(newState)
