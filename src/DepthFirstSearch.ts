@@ -24,7 +24,7 @@ const isDone: <S>(eq: Eq<S>, node: S) => (state: S) => boolean =
     eq(node, state)
 
 const openSet: <S>(state: S) => OpenSet<S> = <S>(state: S) =>
-  PQ.of(initial(state))
+  PQ.priorityQueue(initial(state))
 
 const closedSet: <S>() => ClosedSet<S> = <S>() => hashSet<S>()
 

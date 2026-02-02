@@ -38,10 +38,12 @@ export const empty: <T>() => PriorityQueue<T> = () => []
  *
  * @example
  * ```ts
- * assert.deepStrictEqual(values(of('Hello World!')), ['Hello World!'])
+ * assert.deepStrictEqual(values(priorityQueue('Hello World!')), ['Hello World!'])
  * ```
  */
-export const of: <T>(data: T) => PriorityQueue<T> = <T>(data: T) => [data]
+export const priorityQueue: <T>(data: T) => PriorityQueue<T> = <T>(data: T) => [
+  data,
+]
 
 /**
  * Converts a given PriorityQueue into an array containing current values maintaining priority order
@@ -50,7 +52,7 @@ export const of: <T>(data: T) => PriorityQueue<T> = <T>(data: T) => [data]
  *
  * @example
  * ```ts
- * assert.deepStrictEqual(values(of('Hello World!')), ['Hello World!'])
+ * assert.deepStrictEqual(values(priorityQueue('Hello World!')), ['Hello World!'])
  * ```
  */
 export const values = <T>(priorityQueue: PriorityQueue<T>) => priorityQueue
@@ -93,10 +95,10 @@ export const insert: <T>(
  *
  * @example
  * ```ts
- * const [element, priorityQueue] = poll(of('Hello World!'))
+ * const [element, queue] = poll(priorityQueue('Hello World!'))
  *
  * assert.deepStrictEqual(element, 'Hello World!')
- * assert.deepStrictEqual(values(priorityQueue), [])
+ * assert.deepStrictEqual(values(queue), [])
  * ```
  *
  * @example

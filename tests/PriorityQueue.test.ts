@@ -2,7 +2,7 @@ import { assert, describe, it } from 'vitest'
 import {
   empty,
   insert,
-  of,
+  priorityQueue,
   Ord,
   poll,
   type PriorityQueue,
@@ -47,7 +47,7 @@ describe('PriorityQueue', () => {
     })
 
     it('creates for element', () => {
-      const priorityQueue: PriorityQueue<Person> = of(jane)
+      const queue: PriorityQueue<Person> = priorityQueue(jane)
 
       const expectedPriorityQueueValues: Person[] = [
         {
@@ -55,7 +55,7 @@ describe('PriorityQueue', () => {
           name: 'Jane',
         },
       ]
-      assert.deepStrictEqual(values(priorityQueue), expectedPriorityQueueValues)
+      assert.deepStrictEqual(values(queue), expectedPriorityQueueValues)
     })
   })
   describe('insert', () => {
