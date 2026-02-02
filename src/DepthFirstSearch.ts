@@ -71,7 +71,8 @@ export const depthFirstSearch: Search = async <S>(
       closed: HS.empty(),
     },
     isDone(eq, goal),
-    expandNewStates(expand, hasBeenVisited(eq)),
+    eq,
+    expand,
   )
 
 const nodeOrd = <S>(a: Node<S>, b: Node<S>) => b.key - a.key
@@ -81,39 +82,16 @@ const nodeInsert: <S>(node: Node<S>) => (openSet: OpenSet<S>) => OpenSet<S> =
   (openSet: OpenSet<S>) =>
     PQ.insert(nodeOrd)(node)(openSet)
 
-const hasBeenVisited: <S>(
-  eq: Eq<S>,
-) => (s: S) => (hashSet: HashSet<S>) => boolean =
-  <S>(eq: Eq<S>) =>
+const hasBeenVisited =
+  <S>(eq: Eq<S>, hashSet: HashSet<S>) =>
   (s: S) =>
-  (hashSet: HashSet<S>) =>
     HS.has(eq)(s)(hashSet)
-
-export const expandNewStates =
-  <S>(
-    expand: Expand<S>,
-    hasBeenVisited: (s: S) => (hashSet: HashSet<S>) => boolean,
-  ) =>
-  async (state: State<S>) =>
-    (await Promise.all(expand(state.current.value)))
-      .filter((vector: S) => !hasBeenVisited(vector)(state.closed))
-      .map(
-        (vector: S): Node<S> => ({
-          key: state.current.key - 1,
-          value: vector,
-          parent: state.current,
-        }),
-      )
-      .reduce(
-        (priorityQueue: OpenSet<S>, node: Node<S>) =>
-          nodeInsert(node)(priorityQueue),
-        state.open,
-      )
 
 const expandRecursively = async <S>(
   state: State<S>,
   isGoal: (node: S) => boolean,
-  expandState: (state: State<S>) => Promise<OpenSet<S>>,
+  eq: Eq<S>,
+  expand: Expand<S>,
 ): Promise<S[]> => {
   const newState = poll(state)
 
@@ -125,7 +103,22 @@ const expandRecursively = async <S>(
     return toArray(newState.current)
   }
 
-  const newStates: OpenSet<S> = await expandState(newState)
+  const newStates: OpenSet<S> = (
+    await Promise.all(expand(newState.current.value))
+  )
+    .filter((vector: S) => !hasBeenVisited(eq, newState.closed)(vector))
+    .map(
+      (vector: S): Node<S> => ({
+        key: newState.current.key - 1,
+        value: vector,
+        parent: newState.current,
+      }),
+    )
+    .reduce(
+      (priorityQueue: OpenSet<S>, node: Node<S>) =>
+        nodeInsert(node)(priorityQueue),
+      newState.open,
+    )
 
   const next: State<S> = {
     current: newState.current,
@@ -133,5 +126,5 @@ const expandRecursively = async <S>(
     closed: newState.closed,
   }
 
-  return expandRecursively(next, isGoal, expandState)
+  return expandRecursively(next, isGoal, eq, expand)
 }
