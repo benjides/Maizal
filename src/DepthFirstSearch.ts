@@ -1,6 +1,7 @@
 import * as PQ from './PriorityQueue'
 import * as T from './Tree'
 import * as HS from './HashSet'
+import { PriorityQueue } from './PriorityQueue'
 
 export type Eq<S> = (a: S, b: S) => boolean
 
@@ -15,9 +16,11 @@ export type Search = <S>(
 
 type Node<S> = T.Tree<number, S>
 
+type OpenSet<S> = PriorityQueue<Node<S>>
+
 type State<S> = {
   current: Node<S>
-  open: PQ.PriorityQueue<Node<S>>
+  open: OpenSet<S>
   closed: HS.HashSet<S>
 }
 
@@ -72,7 +75,7 @@ export const expandNewStates =
           T.insert(state.current.key - 1, vector)(state.current),
       )
       .reduce(
-        (priorityQueue: PQ.PriorityQueue<Node<S>>, treeBranch: Node<S>) =>
+        (priorityQueue: OpenSet<S>, treeBranch: Node<S>) =>
           PQ.insert((a: Node<S>, b: Node<S>) => b.key - a.key)(treeBranch)(
             priorityQueue,
           ),
@@ -82,7 +85,7 @@ export const expandNewStates =
 const expandRecursively = async <S>(
   state: State<S>,
   isGoal: (state: State<S>) => boolean,
-  expandState: (state: State<S>) => Promise<PQ.PriorityQueue<Node<S>>>,
+  expandState: (state: State<S>) => Promise<OpenSet<S>>,
 ): Promise<S[]> => {
   const newState = poll(state)
 
@@ -94,7 +97,7 @@ const expandRecursively = async <S>(
     return T.toArray(newState.current)
   }
 
-  const newStates: PQ.PriorityQueue<Node<S>> = await expandState(newState)
+  const newStates: OpenSet<S> = await expandState(newState)
 
   const next: State<S> = {
     current: newState.current,
