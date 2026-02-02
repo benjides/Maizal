@@ -6,10 +6,11 @@ export type Node<S> = {
   parent: Node<S> | null
 }
 
-export const node: <S>(node: Node<S>) => (state: S) => Node<S> =
-  <S>(node: Node<S>) =>
+export const node =
+  <S>(evaluationFunction: (node: Node<S>) => number) =>
+  (node: Node<S>) =>
   (state: S) => ({
-    key: node.key - 1,
+    key: evaluationFunction(node),
     state: state,
     parent: node,
   })

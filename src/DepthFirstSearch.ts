@@ -32,6 +32,11 @@ const openSet: <S>(state: S) => OpenSet<S> = <S>(state: S) =>
 
 const closedSet: <S>() => ClosedSet<S> = <S>() => hashSet<S>()
 
+const depthFirstSearchEvaluationFunction: <S>() => (node: Node<S>) => number =
+  <S>() =>
+  (node: Node<S>) =>
+    node.key - 1
+
 export const depthFirstSearch: Search = async <S>(
   initial: S,
   goal: S,
@@ -42,6 +47,7 @@ export const depthFirstSearch: Search = async <S>(
     openSet(initial),
     closedSet(),
     isDone(eq, goal),
+    node(depthFirstSearchEvaluationFunction()),
     eq,
     expand,
   )
@@ -61,6 +67,7 @@ const expandRecursively = async <S>(
   openSet: OpenSet<S>,
   closedSet: ClosedSet<S>,
   isGoal: (state: S) => boolean,
+  node: (node: Node<S>) => (state: S) => Node<S>,
   eq: Eq<S>,
   expand: Expand<S>,
 ): Promise<S[]> => {
@@ -84,5 +91,5 @@ const expandRecursively = async <S>(
       priorityQueue,
     )
 
-  return expandRecursively(newStates, closed, isGoal, eq, expand)
+  return expandRecursively(newStates, closed, isGoal, node, eq, expand)
 }
