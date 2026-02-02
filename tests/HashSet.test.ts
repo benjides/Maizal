@@ -21,7 +21,7 @@ describe('HashSet', () => {
         y: 8,
       }
 
-      const hashSet = insert(vector)(hashSet())
+      const vectorHashSet = insert(vector)(hashSet())
 
       const expectedHashSetValues: Vector[] = [
         {
@@ -29,13 +29,13 @@ describe('HashSet', () => {
           y: 8,
         },
       ]
-      assert.deepStrictEqual(hashSet, expectedHashSetValues)
+      assert.deepStrictEqual(vectorHashSet, expectedHashSetValues)
     })
   })
 
   describe('has', () => {
     it('does not have element for an empty HashSet', () => {
-      const hashSet = hashSet<Vector>()
+      const vectorHashSet = hashSet<Vector>()
 
       const hasVector = has(
         (a: Vector, b: Vector) => a.x === b.x && b.y === b.y,
@@ -45,7 +45,7 @@ describe('HashSet', () => {
         x: -3,
         y: 8,
       }
-      assert.isFalse(hasVector(vector)(hashSet))
+      assert.isFalse(hasVector(vector)(vectorHashSet))
     })
 
     it('has element for an element present in the HashSet', () => {
@@ -54,13 +54,13 @@ describe('HashSet', () => {
         y: 8,
       }
 
-      const hashSet = insert(vector)(hashSet())
+      const vectorHashSet = insert(vector)(hashSet())
 
       const hasVector = has(
         (a: Vector, b: Vector) => a.x === b.x && b.y === b.y,
       )
 
-      assert.isTrue(hasVector(vector)(hashSet))
+      assert.isTrue(hasVector(vector)(vectorHashSet))
     })
 
     it('has element for an element present in the HashSet with swapped properties', () => {
@@ -69,7 +69,7 @@ describe('HashSet', () => {
         y: 8,
       }
 
-      const hashSet = insert(vector)(hashSet())
+      const vectorHashSet = insert(vector)(hashSet())
 
       const hasVector = has(
         (a: Vector, b: Vector) => a.x === b.x && b.y === b.y,
@@ -79,7 +79,7 @@ describe('HashSet', () => {
         y: 8,
         x: -3,
       }
-      assert.isTrue(hasVector(swappedPropertiesVector)(hashSet))
+      assert.isTrue(hasVector(swappedPropertiesVector)(vectorHashSet))
     })
 
     it('not present HashSet', () => {
@@ -88,13 +88,13 @@ describe('HashSet', () => {
         y: 8,
       }
 
-      const hashSet = insert(vector)(hashSet())
+      const vectorHashSet = insert(vector)(hashSet())
 
       const hasVector = has(
         (a: Vector, b: Vector) => a.x === b.x && b.y === b.y,
       )
 
-      assert.isFalse(hasVector({ x: 1, y: -18 })(hashSet))
+      assert.isFalse(hasVector({ x: 1, y: -18 })(vectorHashSet))
     })
   })
 })

@@ -29,7 +29,7 @@ export const hashSet: <T>() => HashSet<T> = () => []
  *
  * @example
  * ```ts
- * assert.deepStrictEqual(insert(2)(empty<number>()), [2])
+ * assert.deepStrictEqual(insert(2)(hashSet<number>()), [2])
  * ```
  */
 export const insert: <T>(element: T) => (hashSet: HashSet<T>) => HashSet<T> =
@@ -41,14 +41,14 @@ export const insert: <T>(element: T) => (hashSet: HashSet<T>) => HashSet<T> =
  *
  * @example
  * ```ts
- * const hashSet : hashSet<number> = insert(2)(empty())
+ * const hashSet : hashSet<number> = insert(2)(hashSet())
  * const eq : Eq<number> = (x: number, y: number) => x === y
  *
  * assert.isTrue(has(eq)(2)(hashSet))
  * ```
  * @example
  * ```ts
- * const hashSet : hashSet<number> = insert(2)(empty())
+ * const hashSet : hashSet<number> = insert(2)(hashSet())
  * const eq : Eq<number> = (x: number, y: number) => x === y
  *
  * assert.isFalse(has(eq)(87557)(hashSet))
