@@ -51,7 +51,10 @@ const nodeInsert: <S>(node: Node<S>) => (openSet: OpenSet<S>) => OpenSet<S> =
   (openSet: OpenSet<S>) =>
     priorityQueueInsert(nodeOrd<S>())(node)(openSet)
 
-const hasBeenVisited: <S>(eq: Eq<S>, closedSet: ClosedSet<S>) => (state: S) => boolean =
+const hasBeenVisited: <S>(
+  eq: Eq<S>,
+  closedSet: ClosedSet<S>,
+) => (state: S) => boolean =
   <S>(eq: Eq<S>, closedSet: ClosedSet<S>) =>
   (state: S) =>
     has(eq)(state)(closedSet)
