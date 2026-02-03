@@ -9,8 +9,7 @@ export type Node<S> = {
 }
 
 export const node =
-  <S>() =>
-  (node: Node<S>) =>
+  <S>(node: Node<S>) =>
   (state: S): Node<S> => ({
     state: state,
     parent: node,

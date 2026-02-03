@@ -42,7 +42,6 @@ export const search =
       closedSet(),
       nodeInsert(evaluate),
       isDone(eq, goal),
-      node(),
       eq,
       expand,
     )
@@ -68,7 +67,6 @@ const expandRecursively = async <S>(
   closedSet: ClosedSet<S>,
   openSetInsert: (node: Node<S>) => (openSet: OpenSet<S>) => OpenSet<S>,
   isGoal: (state: S) => boolean,
-  node: (node: Node<S>) => (state: S) => Node<S>,
   eq: Eq<S>,
   expand: Expand<S>,
 ): Promise<S[]> => {
@@ -92,13 +90,5 @@ const expandRecursively = async <S>(
       priorityQueue,
     )
 
-  return expandRecursively(
-    newStates,
-    closed,
-    openSetInsert,
-    isGoal,
-    node,
-    eq,
-    expand,
-  )
+  return expandRecursively(newStates, closed, openSetInsert, isGoal, eq, expand)
 }
