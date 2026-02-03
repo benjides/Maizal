@@ -6,6 +6,7 @@ export type Node<S> = {
   key: number
   state: S
   parent: Node<S> | null
+  depth: number
 }
 
 export const node =
@@ -15,12 +16,14 @@ export const node =
     key: evaluate(node),
     state: state,
     parent: node,
+    depth: node.depth + 1,
   })
 
 export const initial: <S>(state: S) => Node<S> = <S>(state: S): Node<S> => ({
   key: 0,
   state: state,
   parent: null,
+  depth: 0,
 })
 
 export const toArray: <S>(node: Node<S>) => S[] = <S>(node: Node<S>) =>
