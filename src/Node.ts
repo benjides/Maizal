@@ -3,24 +3,21 @@ import { Ord } from './PriorityQueue'
 import { Evaluate } from './Search'
 
 export type Node<S> = {
-  key: number
   state: S
   parent: Node<S> | null
   depth: number
 }
 
 export const node =
-  <S>(evaluate: Evaluate<S>) =>
+  <S>() =>
   (node: Node<S>) =>
   (state: S): Node<S> => ({
-    key: evaluate(node),
     state: state,
     parent: node,
     depth: node.depth + 1,
   })
 
 export const initial: <S>(state: S) => Node<S> = <S>(state: S): Node<S> => ({
-  key: 0,
   state: state,
   parent: null,
   depth: 0,

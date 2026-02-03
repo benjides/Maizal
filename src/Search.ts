@@ -42,7 +42,7 @@ export const search =
       closedSet(),
       nodeInsert(evaluate),
       isDone(eq, goal),
-      node(evaluate),
+      node(),
       eq,
       expand,
     )
