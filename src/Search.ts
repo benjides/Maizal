@@ -40,16 +40,20 @@ export const search =
     expandRecursively(
       openSet(initial),
       closedSet(),
+      nodeInsert(evaluate),
       isDone(eq, goal),
       node(evaluate),
       eq,
       expand,
     )
 
-const nodeInsert: <S>(node: Node<S>) => (openSet: OpenSet<S>) => OpenSet<S> =
-  <S>(node: Node<S>) =>
+const nodeInsert: <S>(
+  evaluate: Evaluate<S>,
+) => (node: Node<S>) => (openSet: OpenSet<S>) => OpenSet<S> =
+  <S>(evaluate: Evaluate<S>) =>
+  (node: Node<S>) =>
   (openSet: OpenSet<S>) =>
-    priorityQueueInsert(nodeOrd<S>())(node)(openSet)
+    priorityQueueInsert(nodeOrd(evaluate))(node)(openSet)
 
 const hasBeenVisited: <S>(
   eq: Eq<S>,
@@ -62,6 +66,7 @@ const hasBeenVisited: <S>(
 const expandRecursively = async <S>(
   openSet: OpenSet<S>,
   closedSet: ClosedSet<S>,
+  openSetInsert: (node: Node<S>) => (openSet: OpenSet<S>) => OpenSet<S>,
   isGoal: (state: S) => boolean,
   node: (node: Node<S>) => (state: S) => Node<S>,
   eq: Eq<S>,
@@ -83,9 +88,17 @@ const expandRecursively = async <S>(
     .filter((state: S) => !hasBeenVisited(eq, closed)(state))
     .map(node(n))
     .reduce(
-      (openSet: OpenSet<S>, node: Node<S>) => nodeInsert(node)(openSet),
+      (openSet: OpenSet<S>, node: Node<S>) => openSetInsert(node)(openSet),
       priorityQueue,
     )
 
-  return expandRecursively(newStates, closed, isGoal, node, eq, expand)
+  return expandRecursively(
+    newStates,
+    closed,
+    openSetInsert,
+    isGoal,
+    node,
+    eq,
+    expand,
+  )
 }

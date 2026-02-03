@@ -29,7 +29,7 @@ export const initial: <S>(state: S) => Node<S> = <S>(state: S): Node<S> => ({
 export const toArray: <S>(node: Node<S>) => S[] = <S>(node: Node<S>) =>
   node.parent === null ? [node.state] : [...toArray(node.parent), node.state]
 
-export const nodeOrd: <S>() => Ord<Node<S>> =
-  <S>() =>
+export const nodeOrd: <S>(evaluate: Evaluate<S>) => Ord<Node<S>> =
+  <S>(evaluate: Evaluate<S>) =>
   (a: Node<S>, b: Node<S>) =>
-    b.key - a.key
+    evaluate(b) - evaluate(a)
