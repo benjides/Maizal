@@ -11,7 +11,7 @@ export type Node<S> = {
 export const node =
   <S>(evaluate: Evaluate<S>) =>
   (node: Node<S>) =>
-  (state: S) => ({
+  (state: S): Node<S> => ({
     key: evaluate(node),
     state: state,
     parent: node,
