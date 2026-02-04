@@ -1,5 +1,4 @@
 import { describe, it, assert } from 'vitest'
-import { bestFirstSearch } from '../src/BestFirstSearch'
 import {
   down,
   expand,
@@ -102,7 +101,7 @@ describe('AStar', () => {
       y: 2,
     }
 
-    const actualSolution = await bestFirstSearch(
+    const actualSolution = await aStar(euclideanDistance(goal))(
       initial,
       goal,
       positionEquality,
@@ -111,7 +110,7 @@ describe('AStar', () => {
 
     const expectedSolution: Position[] = [
       { x: 0, y: 1 },
-      { x: 0, y: 2 },
+      { x: 1, y: 1 },
       { x: 1, y: 2 },
     ]
     assert.deepStrictEqual(actualSolution, expectedSolution)
