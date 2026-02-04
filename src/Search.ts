@@ -11,7 +11,7 @@ export type Eq<S> = (a: S, b: S) => boolean
 
 export type Expand<S> = (s: S) => Promise<S>[]
 
-export type Search = <S>(
+export type Search<S> = (
   initial: S,
   goal: S,
   eq: Eq<S>,
@@ -34,7 +34,7 @@ const isDone: <S>(eq: Eq<S>, node: S) => (state: S) => boolean =
   (state: T) =>
     eq(node, state)
 
-export const search =
+export const search: <S>(evaluate: Evaluate<S>) => Search<S> =
   <S>(evaluate: Evaluate<S>) =>
   async (initial: S, goal: S, eq: Eq<S>, expand: Expand<S>): Promise<S[]> =>
     expandRecursively(
