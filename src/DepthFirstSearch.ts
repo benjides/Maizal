@@ -1,9 +1,11 @@
 import { Node } from './Node'
-import { Evaluate, Search, search } from './Search'
+import { Evaluate, Search, solver } from './Search'
 
 const depthFirstSearchEvaluate: <S>() => Evaluate<S> =
   <S>() =>
   (node: Node<S>) =>
     -node.depth
 
-export const depthFirstSearch: Search = search(depthFirstSearchEvaluate())
+export const depthFirstSearch: <S>(search: Search<S>) => Promise<S[]> = solver(
+  depthFirstSearchEvaluate(),
+)

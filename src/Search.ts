@@ -11,12 +11,24 @@ export type Eq<S> = (a: S, b: S) => boolean
 
 export type Expand<S> = (s: S) => Promise<S>[]
 
-export type Search<S> = (
+export type Search<S> = {
+  initial: S
+  goal: S
+  eq: Eq<S>
+  expand: Expand<S>
+}
+
+export const search: <S>(
   initial: S,
   goal: S,
   eq: Eq<S>,
   expand: Expand<S>,
-) => Promise<S[]>
+) => Search<S> = <S>(initial: S, goal: S, eq: Eq<S>, expand: Expand<S>) => ({
+  initial: initial,
+  goal: goal,
+  eq: eq,
+  expand: expand,
+})
 
 type OpenSet<S> = PriorityQueue<Node<S>>
 
@@ -29,22 +41,24 @@ const closedSet: <S>() => ClosedSet<S> = <S>() => hashSet<S>()
 
 export type Evaluate<S> = (node: Node<S>) => number
 
+export const solver: <S>(
+  evaluate: Evaluate<S>,
+) => (search: Search<S>) => Promise<S[]> =
+  <S>(evaluate: Evaluate<S>) =>
+  (search: Search<S>) =>
+    expandRecursively(
+      openSet(search.initial),
+      closedSet(),
+      nodeInsert(evaluate),
+      isDone(search.eq, search.goal),
+      search.eq,
+      search.expand,
+    )
+
 const isDone: <S>(eq: Eq<S>, node: S) => (state: S) => boolean =
   <T>(eq: Eq<T>, node: T) =>
   (state: T) =>
     eq(node, state)
-
-export const search: <S>(evaluate: Evaluate<S>) => Search<S> =
-  <S>(evaluate: Evaluate<S>) =>
-  async (initial: S, goal: S, eq: Eq<S>, expand: Expand<S>): Promise<S[]> =>
-    expandRecursively(
-      openSet(initial),
-      closedSet(),
-      nodeInsert(evaluate),
-      isDone(eq, goal),
-      eq,
-      expand,
-    )
 
 const nodeInsert: <S>(
   evaluate: Evaluate<S>,

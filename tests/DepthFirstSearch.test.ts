@@ -11,6 +11,7 @@ import {
   stall,
   up,
 } from './Grid'
+import { search } from '../src/Search'
 
 describe('DepthFirstSearch', () => {
   it('solves when initial and goal are equals', async () => {
@@ -24,11 +25,8 @@ describe('DepthFirstSearch', () => {
       y: 0,
     }
 
-    const actualSolution = await depthFirstSearch(
-      initial,
-      goal,
-      positionEquality,
-      expand(grid)([]),
+    const actualSolution: Position[] = await depthFirstSearch(
+      search(initial, goal, positionEquality, expand(grid)([])),
     )
 
     const expectedSolution: Position[] = [{ x: 0, y: 0 }]
@@ -46,11 +44,8 @@ describe('DepthFirstSearch', () => {
       y: 0,
     }
 
-    const actualSolution = await depthFirstSearch(
-      initial,
-      goal,
-      positionEquality,
-      expand(corridor)([right]),
+    const actualSolution: Position[] = await depthFirstSearch(
+      search(initial, goal, positionEquality, expand(corridor)([right])),
     )
 
     const expectedSolution: Position[] = [
@@ -71,11 +66,8 @@ describe('DepthFirstSearch', () => {
       y: 0,
     }
 
-    const actualSolution = await depthFirstSearch(
-      initial,
-      goal,
-      positionEquality,
-      expand(corridor)([right]),
+    const actualSolution: Position[] = await depthFirstSearch(
+      search(initial, goal, positionEquality, expand(corridor)([right])),
     )
 
     const expectedSolution: Position[] = [
@@ -97,11 +89,13 @@ describe('DepthFirstSearch', () => {
       y: 2,
     }
 
-    const actualSolution = await depthFirstSearch(
-      initial,
-      goal,
-      positionEquality,
-      expand(grid)([up, down, right, left]),
+    const actualSolution: Position[] = await depthFirstSearch(
+      search(
+        initial,
+        goal,
+        positionEquality,
+        expand(grid)([up, down, right, left]),
+      ),
     )
 
     const expectedSolution: Position[] = [
@@ -123,11 +117,13 @@ describe('DepthFirstSearch', () => {
       y: 2,
     }
 
-    const actualSolution = await depthFirstSearch(
-      initial,
-      goal,
-      positionEquality,
-      expand(grid)([up, down, right, left]),
+    const actualSolution: Position[] = await depthFirstSearch(
+      search(
+        initial,
+        goal,
+        positionEquality,
+        expand(grid)([up, down, right, left]),
+      ),
     )
 
     const expectedSolution: Position[] = [
@@ -155,11 +151,8 @@ describe('DepthFirstSearch', () => {
       y: 100,
     }
 
-    const actualSolution = await depthFirstSearch(
-      initial,
-      goal,
-      positionEquality,
-      expand(grid)([up]),
+    const actualSolution: Position[] = await depthFirstSearch(
+      search(initial, goal, positionEquality, expand(grid)([up])),
     )
 
     const expectedSolution: Position[] = []
@@ -177,11 +170,8 @@ describe('DepthFirstSearch', () => {
       y: 0,
     }
 
-    const actualSolution = await depthFirstSearch(
-      initial,
-      goal,
-      positionEquality,
-      expand(corridor)([stall, right]),
+    const actualSolution: Position[] = await depthFirstSearch(
+      search(initial, goal, positionEquality, expand(corridor)([stall, right])),
     )
 
     const expectedSolution: Position[] = [

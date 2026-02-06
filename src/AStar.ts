@@ -1,5 +1,5 @@
 import { Node } from './Node'
-import { Evaluate, Search, search } from './Search'
+import { Evaluate, Search, solver } from './Search'
 
 const aStarEvaluate: <S>(heuristics: Heuristics<S>) => Evaluate<S> =
   <S>(heuristics: Heuristics<S>) =>
@@ -8,6 +8,7 @@ const aStarEvaluate: <S>(heuristics: Heuristics<S>) => Evaluate<S> =
 
 export type Heuristics<S> = (currentState: S) => number
 
-export const aStar: <S>(heuristics: Heuristics<S>) => Search<S> = <S>(
+export const aStar: <S>(
   heuristics: Heuristics<S>,
-) => search(aStarEvaluate(heuristics))
+) => (search: Search<S>) => Promise<S[]> = <S>(heuristics: Heuristics<S>) =>
+  solver(aStarEvaluate(heuristics))

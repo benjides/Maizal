@@ -11,6 +11,7 @@ import {
   up,
 } from './Grid'
 import { aStar, Heuristics } from '../src/AStar'
+import { search } from '../src/Search'
 
 const euclideanDistance: (goal: Position) => Heuristics<Position> =
   (goal: Position) => (position: Position) =>
@@ -28,11 +29,8 @@ describe('AStar', () => {
       y: 0,
     }
 
-    const actualSolution = await aStar(euclideanDistance(goal))(
-      initial,
-      goal,
-      positionEquality,
-      expand(grid)([]),
+    const actualSolution: Position[] = await aStar(euclideanDistance(goal))(
+      search(initial, goal, positionEquality, expand(grid)([])),
     )
 
     const expectedSolution: Position[] = [{ x: 0, y: 0 }]
@@ -50,11 +48,8 @@ describe('AStar', () => {
       y: 0,
     }
 
-    const actualSolution = await aStar(euclideanDistance(goal))(
-      initial,
-      goal,
-      positionEquality,
-      expand(corridor)([right]),
+    const actualSolution: Position[] = await aStar(euclideanDistance(goal))(
+      search(initial, goal, positionEquality, expand(corridor)([right])),
     )
 
     const expectedSolution: Position[] = [
@@ -75,11 +70,8 @@ describe('AStar', () => {
       y: 0,
     }
 
-    const actualSolution = await aStar(euclideanDistance(goal))(
-      initial,
-      goal,
-      positionEquality,
-      expand(corridor)([right]),
+    const actualSolution: Position[] = await aStar(euclideanDistance(goal))(
+      search(initial, goal, positionEquality, expand(corridor)([right])),
     )
 
     const expectedSolution: Position[] = [
@@ -101,11 +93,13 @@ describe('AStar', () => {
       y: 2,
     }
 
-    const actualSolution = await aStar(euclideanDistance(goal))(
-      initial,
-      goal,
-      positionEquality,
-      expand(grid)([up, down, right, left]),
+    const actualSolution: Position[] = await aStar(euclideanDistance(goal))(
+      search(
+        initial,
+        goal,
+        positionEquality,
+        expand(grid)([up, down, right, left]),
+      ),
     )
 
     const expectedSolution: Position[] = [
@@ -127,11 +121,13 @@ describe('AStar', () => {
       y: 2,
     }
 
-    const actualSolution = await aStar(euclideanDistance(goal))(
-      initial,
-      goal,
-      positionEquality,
-      expand(grid)([up, down, right, left]),
+    const actualSolution: Position[] = await aStar(euclideanDistance(goal))(
+      search(
+        initial,
+        goal,
+        positionEquality,
+        expand(grid)([up, down, right, left]),
+      ),
     )
 
     const expectedSolution: Position[] = [
@@ -155,11 +151,13 @@ describe('AStar', () => {
       y: 2,
     }
 
-    const actualSolution = await aStar(euclideanDistance(goal))(
-      initial,
-      goal,
-      positionEquality,
-      expand(grid)([up, down, right, left]),
+    const actualSolution: Position[] = await aStar(euclideanDistance(goal))(
+      search(
+        initial,
+        goal,
+        positionEquality,
+        expand(grid)([up, down, right, left]),
+      ),
     )
 
     const expectedSolution: Position[] = [
@@ -183,11 +181,8 @@ describe('AStar', () => {
       y: 100,
     }
 
-    const actualSolution = await aStar(euclideanDistance(goal))(
-      initial,
-      goal,
-      positionEquality,
-      expand(grid)([up]),
+    const actualSolution: Position[] = await aStar(euclideanDistance(goal))(
+      search(initial, goal, positionEquality, expand(grid)([up])),
     )
 
     const expectedSolution: Position[] = []
@@ -205,11 +200,8 @@ describe('AStar', () => {
       y: 0,
     }
 
-    const actualSolution = await aStar(euclideanDistance(goal))(
-      initial,
-      goal,
-      positionEquality,
-      expand(corridor)([stall, right]),
+    const actualSolution: Position[] = await aStar(euclideanDistance(goal))(
+      search(initial, goal, positionEquality, expand(corridor)([stall, right])),
     )
 
     const expectedSolution: Position[] = [
